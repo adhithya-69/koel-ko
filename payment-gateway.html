@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Checkout — Koel & Ko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --navy: #0d1b2a;
+  --navy-deep: #080f18;
+  --charcoal: #1c2633;
+  --charcoal-mid: #243040;
+  --offwhite: #f5f2ed;
+  --offwhite-dim: #ddd8d0;
+  --gold: #c9a84c;
+  --gold-light: #e2c47a;
+  --gold-pale: #f7edd4;
+  --gold-dark: #9b7a30;
+  --text-main: #f5f2ed;
+  --text-muted: #8a9bac;
+  --text-soft: #b8c5d0;
+  --border-subtle: rgba(201, 168, 76, 0.18);
+  --border-mid: rgba(201, 168, 76, 0.35);
+  --success: #4ade80;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy-deep);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5rem 2rem 3rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--text-main);
+  text-decoration: none;
+}
+.logo span {
+  color: var(--gold);
+}
+
+/* Background overlay noise */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: .03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.checkout-container {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(28, 38, 51, 0.65);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  z-index: 10;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+
+/* Left panel: Payment form */
+.form-section {
+  padding: 3rem;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.merchant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+
+.merchant-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+.merchant-logo span {
+  color: var(--gold);
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.security-badge svg {
+  fill: var(--gold);
+  width: 12px;
+  height: 12px;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 0.5rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.8rem 1.2rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+  position: relative;
+}
+
+.tab-btn:hover {
+  color: var(--gold-light);
+}
+
+.tab-btn.active {
+  color: var(--gold);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.6rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card details styling */
+.card-input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.input-group input {
+  width: 100%;
+  background: rgba(8, 15, 24, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-main);
+  padding: 0.9rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--border-mid);
+}
+
+.input-group input::placeholder {
+  color: rgba(138, 155, 172, 0.3);
+}
+
+/* Live Card Preview */
+.card-preview-container {
+  perspective: 1000px;
+  margin-bottom: 2rem;
+}
+
+.credit-card {
+  width: 100%;
+  aspect-ratio: 1.586/1;
+  background: linear-gradient(135deg, #1f2f45 0%, #0b1522 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 1.8rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+.credit-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-chip {
+  width: 38px;
+  height: 30px;
+  background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+  border-radius: 6px;
+  position: relative;
+}
+
+.card-logo {
+  height: 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.card-number-display {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  color: var(--text-main);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  margin-top: 1.5rem;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+
+.card-info-lbl {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.2rem;
+}
+
+.card-info-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* UPI Section */
+.upi-info {
+  text-align: center;
+  padding: 1rem 0 2rem;
+}
+
+.qr-code-box {
+  width: 160px;
+  height: 160px;
+  background: white;
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+.qr-code-box svg {
+  width: 100%;
+  height: 100%;
+}
+
+.upi-details-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--gold-light);
+  margin-bottom: 0.5rem;
+}
+
+.copy-btn {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--border-subtle);
+  color: var(--gold);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.copy-btn:hover {
+  background: rgba(201,168,76,0.2);
+}
+
+.upi-instruction {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* Netbanking Grid */
+.nb-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.nb-bank {
+  background: rgba(8, 15, 24, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 1.2rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nb-bank:hover, .nb-bank.active {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.06);
+  color: var(--gold);
+}
+
+.nb-bank-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.submit-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--navy-deep);
+  border: none;
+  border-radius: 4px;
+  padding: 1.1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.submit-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Right panel: Order details */
+.summary-section {
+  padding: 3rem;
+  background: rgba(8, 15, 24, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.summary-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-soft);
+  margin-bottom: 2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding: 0.8rem 0;
+  color: var(--text-soft);
+}
+
+.info-item.total {
+  font-weight: 500;
+  color: var(--text-main);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.info-item.total span:last-child {
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+
+.trust-badge {
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid var(--border-subtle);
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-top: 2rem;
+}
+
+/* Loading overlay */
+.processing-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 15, 24, 0.9);
+  backdrop-filter: blur(15px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--text-main);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.processing-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(201,168,76,0.1);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 2rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.processing-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-light);
+  margin-bottom: 0.5rem;
+}
+
+.processing-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* OTP modal styling */
+.otp-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: var(--charcoal);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  padding: 2.5rem;
+  z-index: 1100;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.otp-dialog.active {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.otp-dialog h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 0.8rem;
+}
+
+.otp-dialog p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.8rem;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 1.8rem;
+}
+
+.otp-input {
+  width: 48px;
+  height: 48px;
+  background: rgba(8, 15, 24, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: var(--text-main);
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 1.25rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.otp-input:focus {
+  border-color: var(--gold);
+}
+
+.otp-timer {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.otp-timer span {
+  color: var(--gold);
+}
+
+.otp-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.otp-btn {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.otp-cancel {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.otp-cancel:hover {
+  border-color: var(--offwhite-dim);
+  color: var(--text-main);
+}
+
+.otp-submit {
+  background: var(--gold);
+  border: none;
+  color: var(--navy-deep);
+}
+
+.otp-submit:hover {
+  background: var(--gold-light);
+}
+
+/* Success Checkmark Screen */
+.success-screen {
+  text-align: center;
+  animation: popScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.checkmark-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.checkmark-circle svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--success);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawCheck 0.6s 0.2s ease-out forwards;
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes popScale {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+  .form-section {
+    padding: 2rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .summary-section {
+    padding: 2rem;
+  }
+  .card-input-grid {
+    grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 4rem;background:rgba(8,15,24,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-subtle)">
+  <a href="koel-and-ko.html" class="logo">Koel <span style="color:var(--gold)">&</span> Ko</a>
+  <a href="koel-and-ko.html" style="font-size:.75rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;text-decoration:none">← Cancel Payment</a>
+</nav>
+
+<div class="checkout-container">
+  
+  <!-- Left Panel: Payment details -->
+  <div class="form-section">
+    <div class="merchant-header" style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div class="merchant-logo" style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--text-main); font-weight:500;">Koel <span style="color:var(--gold)">&</span> Ko</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;" id="gatewayDescription">Website Booking Advance</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.3rem;">
+        <div class="security-badge">
+          <svg viewBox="0 0 24 24" style="fill: #3b82f6; width: 12px; height: 12px;"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <span style="color: #3b82f6; font-weight: 600; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase;">Razorpay Secure</span>
+        </div>
+        <div style="font-size: 0.62rem; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; font-family: 'DM Mono', monospace;">Demo Gateway</div>
+      </div>
+    </div>
+
+    <!-- Navigation tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('card')" id="tabBtn-card">Card</button>
+      <button class="tab-btn" onclick="switchTab('upi')" id="tabBtn-upi">UPI</button>
+      <button class="tab-btn" onclick="switchTab('nb')" id="tabBtn-nb">Net Banking</button>
+    </div>
+
+    <!-- CARD FORM -->
+    <div class="tab-content active" id="tabContent-card">
+      <div class="card-preview-container">
+        <div class="credit-card">
+          <div class="card-top">
+            <div class="card-chip"></div>
+            <div class="card-logo" id="cardBrand">CARD</div>
+          </div>
+          <div class="card-number-display" id="cardNumPreview">•••• •••• •••• ••••</div>
+          <div class="card-bottom">
+            <div>
+              <div class="card-info-lbl">Card Holder</div>
+              <div class="card-info-val" id="cardHolderPreview">Your Name</div>
+            </div>
+            <div>
+              <div class="card-info-lbl">Expires</div>
+              <div class="card-info-val" id="cardExpiryPreview">MM/YY</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-input-grid">
+        <div class="input-group full-width">
+          <label for="cardNumber">Card Number</label>
+          <input type="text" id="cardNumber" placeholder="4111 2222 3333 4444" maxlength="19" autocomplete="cc-number">
+        </div>
+        <div class="input-group full-width">
+          <label for="cardHolder">Card Holder Name</label>
+          <input type="text" id="cardHolder" placeholder="e.g. Priya Mehta" autocomplete="cc-name">
+        </div>
+        <div class="input-group">
+          <label for="cardExpiry">Expiry Date</label>
+          <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp">
+        </div>
+        <div class="input-group">
+          <label for="cardCvv">CVV</label>
+          <input type="password" id="cardCvv" placeholder="•••" maxlength="3" autocomplete="cc-csc">
+        </div>
+      </div>
+      
+      <div id="cardError" style="color:#ff5c5c; font-size:0.8rem; margin-bottom:1.5rem; display:none; font-family:'DM Mono',monospace; letter-spacing:0.05em; font-weight:500; text-transform:uppercase; text-align:center;"></div>
+      <button class="submit-btn" onclick="startCardPayment()" id="payBtn-card">
+        <span>🔒</span> Pay ₹<span class="pay-amount-lbl">9,999</span>
+      </button>
+    </div>
+
+    <!-- UPI FORM -->
+    <div class="tab-content" id="tabContent-upi">
+      <div class="upi-info">
+        <div class="qr-code-box">
+          <!-- A beautiful simulated QR code pattern -->
+          <svg viewBox="0 0 100 100" fill="none" stroke="#0d1b2a">
+            <!-- Outer border blocks -->
+            <rect x="5" y="5" width="25" height="25" stroke-width="4"/>
+            <rect x="11" y="11" width="13" height="13" fill="#0d1b2a"/>
+            <rect x="70" y="5" width="25" height="25" stroke-width="4"/>
+            <rect x="76" y="11" width="13" height="13" fill="#0d1b2a"/>
+            <rect x="5" y="70" width="25" height="25" stroke-width="4"/>
+            <rect x="11" y="76" width="13" height="13" fill="#0d1b2a"/>
+            
+            <!-- Simulated QR pixels -->
+            <rect x="40" y="5" width="6" height="6" fill="#0d1b2a"/>
+            <rect x="50" y="12" width="6" height="12" fill="#c9a84c"/>
+            <rect x="40" y="25" width="12" height="6" fill="#0d1b2a"/>
+            <rect x="58" y="20" width="6" height="6" fill="#0d1b2a"/>
+            
+            <rect x="5" y="40" width="12" height="6" fill="#c9a84c"/>
+            <rect x="25" y="40" width="6" height="12" fill="#0d1b2a"/>
+            <rect x="12" y="52" width="6" height="6" fill="#0d1b2a"/>
+            
+            <rect x="40" y="40" width="20" height="20" stroke="#0d1b2a" stroke-width="3"/>
+            <rect x="46" y="46" width="8" height="8" fill="#c9a84c"/>
+            
+            <rect x="70" y="40" width="6" height="12" fill="#0d1b2a"/>
+            <rect x="85" y="45" width="10" height="6" fill="#c9a84c"/>
+            <rect x="75" y="60" width="12" height="6" fill="#0d1b2a"/>
+            
+            <rect x="40" y="70" width="12" height="6" fill="#c9a84c"/>
+            <rect x="58" y="70" width="6" height="12" fill="#0d1b2a"/>
+            <rect x="48" y="82" width="18" height="6" fill="#0d1b2a"/>
+            <rect x="40" y="90" width="6" height="6" fill="#c9a84c"/>
+            
+            <rect x="70" y="80" width="12" height="12" fill="#0d1b2a"/>
+            <rect x="88" y="75" width="6" height="6" fill="#c9a84c"/>
+            <rect x="88" y="88" width="6" height="6" fill="#0d1b2a"/>
+          </svg>
+        </div>
+        <div class="upi-details-row">
+          <span id="upiId">koelko@razorpay</span>
+          <button class="copy-btn" onclick="copyUpi()">Copy ID</button>
+        </div>
+        <p class="upi-instruction">Scan this QR code using any UPI app (GPay, PhonePe, Paytm) to make your payment.</p>
+      </div>
+
+      <button class="submit-btn" onclick="startUpiPayment()" id="payBtn-upi">
+        <span>✓</span> I Have Paid Via UPI
+      </button>
+    </div>
+
+    <!-- NET BANKING FORM -->
+    <div class="tab-content" id="tabContent-nb">
+      <div class="nb-grid">
+        <div class="nb-bank" onclick="selectBank(this, 'HDFC Bank')">
+          <div class="nb-bank-logo">HDFC</div>
+          <span>HDFC Bank</span>
+        </div>
+        <div class="nb-bank" onclick="selectBank(this, 'ICICI Bank')">
+          <div class="nb-bank-logo">ICICI</div>
+          <span>ICICI Bank</span>
+        </div>
+        <div class="nb-bank" onclick="selectBank(this, 'SBI')">
+          <div class="nb-bank-logo">SBI</div>
+          <span>State Bank of India</span>
+        </div>
+        <div class="nb-bank" onclick="selectBank(this, 'Axis Bank')">
+          <div class="nb-bank-logo">AXIS</div>
+          <span>Axis Bank</span>
+        </div>
+      </div>
+      
+      <div id="nbError" style="color:#ff5c5c; font-size:0.8rem; margin-bottom:1.5rem; display:none; font-family:'DM Mono',monospace; letter-spacing:0.05em; font-weight:500; text-transform:uppercase; text-align:center;"></div>
+      <button class="submit-btn" onclick="startNbPayment()" id="payBtn-nb">
+        <span>🔒</span> Pay ₹<span class="pay-amount-lbl">9,999</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Panel: Summary -->
+  <div class="summary-section">
+    <div>
+      <h3 class="summary-title">Summary</h3>
+      <div class="info-item">
+        <span>Merchant</span>
+        <span style="font-weight: 500; color: var(--text-main)">Koel & Ko</span>
+      </div>
+      <div class="info-item">
+        <span>Plan Selected</span>
+        <span id="summaryPlan">Business</span>
+      </div>
+      <div class="info-item">
+        <span>Client Name</span>
+        <span id="summaryName">Client</span>
+      </div>
+      <div class="info-item">
+        <span>Reference ID</span>
+        <span id="refId" style="font-family: 'DM Mono', monospace; font-size: 0.8rem">KK-8902</span>
+      </div>
+    </div>
+    
+    <div>
+      <div class="info-item total">
+        <span>Advance Amount</span>
+        <span id="summaryDue">₹9,999</span>
+      </div>
+      <div class="trust-badge">
+        This is a secure 256-bit encrypted demonstration gateway. No real money will be charged from your account during this simulation.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Simulated Processing Modal -->
+<div class="processing-overlay" id="processingOverlay">
+  <div class="spinner"></div>
+  <div class="processing-status" id="processingStatus">Establishing connection...</div>
+  <div class="processing-sub">Please do not refresh or close this window.</div>
+</div>
+
+<!-- OTP Verification Modal -->
+<div class="otp-dialog" id="otpDialog">
+  <h3>Secure Verification</h3>
+  <p>Please enter the 6-digit OTP code sent to your registered mobile number ending in •••• 8812 to authorize this payment of <strong style="color: var(--gold)" id="otpAmount">₹9,999</strong>.</p>
+  
+  <div class="otp-inputs">
+    <input type="text" class="otp-input" maxlength="1" onkeyup="moveFocus(this, 'otp2')" id="otp1">
+    <input type="text" class="otp-input" maxlength="1" onkeyup="moveFocus(this, 'otp3')" id="otp2">
+    <input type="text" class="otp-input" maxlength="1" onkeyup="moveFocus(this, 'otp4')" id="otp3">
+    <input type="text" class="otp-input" maxlength="1" onkeyup="moveFocus(this, 'otp5')" id="otp4">
+    <input type="text" class="otp-input" maxlength="1" onkeyup="moveFocus(this, 'otp6')" id="otp5">
+    <input type="text" class="otp-input" maxlength="1" id="otp6">
+  </div>
+
+  <div class="otp-timer">Resend OTP code in <span id="otpCountdown">59</span>s</div>
+
+  <div id="otpError" style="color:#ff5c5c; font-size:0.8rem; margin-top:-0.5rem; margin-bottom:1.5rem; display:none; font-family:'DM Mono',monospace; letter-spacing:0.05em; font-weight:500; text-transform:uppercase; text-align:center;"></div>
+  <div class="otp-actions">
+    <button class="otp-btn otp-cancel" onclick="closeOtp()">Cancel</button>
+    <button class="otp-btn otp-submit" onclick="verifyOtp()">Verify Code</button>
+  </div>
+</div>
+
+<script>
+// Parse URL Query Parameters
+const urlParams = new URLSearchParams(window.location.search);
+const plan = urlParams.get('plan') || 'Business';
+const amount = parseInt(urlParams.get('amount')) || 9999;
+const clientName = urlParams.get('name') || 'Client';
+const email = urlParams.get('email') || 'hello@koelko.in';
+const initialMethod = urlParams.get('method') || 'CARD';
+
+// Populate summary data
+document.getElementById('summaryPlan').textContent = plan;
+document.getElementById('summaryName').textContent = clientName;
+document.getElementById('refId').textContent = 'KK-' + String(Math.floor(Math.random()*9000)+1000);
+document.getElementById('otpAmount').textContent = '₹' + amount.toLocaleString('en-IN');
+
+// Dynamic description for the booking
+const descEl = document.getElementById('gatewayDescription');
+if (descEl) {
+  const packageNames = {
+    Starter: 'Starter Website Booking (50% Advance)',
+    Business: 'Business Website Booking (50% Advance)',
+    Premium: 'E-Commerce Store Booking (50% Advance)'
+  };
+  descEl.textContent = packageNames[plan] || `${plan} Website Booking (50% Advance)`;
+}
+
+const formattedAmount = '₹' + amount.toLocaleString('en-IN');
+document.getElementById('summaryDue').textContent = formattedAmount;
+document.querySelectorAll('.pay-amount-lbl').forEach(el => el.textContent = amount.toLocaleString('en-IN'));
+
+// Tab Switching System
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  
+  document.getElementById(`tabBtn-${tabId}`).classList.add('active');
+  document.getElementById(`tabContent-${tabId}`).classList.add('active');
+  
+  // Clear any existing errors when switching tabs
+  const cardErr = document.getElementById('cardError');
+  const nbErr = document.getElementById('nbError');
+  if (cardErr) cardErr.style.display = 'none';
+  if (nbErr) nbErr.style.display = 'none';
+}
+
+// Auto-activate correct tab on page load based on query method
+if (initialMethod.toUpperCase() === 'UPI') {
+  switchTab('upi');
+} else if (initialMethod.toUpperCase() === 'NET BANKING' || initialMethod.toUpperCase() === 'NETBANKING' || initialMethod.toUpperCase() === 'NB') {
+  switchTab('nb');
+} else {
+  switchTab('card');
+}
+
+// Live card inputs link
+const cardNumInput = document.getElementById('cardNumber');
+const cardHolderInput = document.getElementById('cardHolder');
+const cardExpiryInput = document.getElementById('cardExpiry');
+
+if (cardNumInput) {
+  cardNumInput.addEventListener('input', (e) => {
+    // Format to 4-digit chunks
+    let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    let formatted = '';
+    for(let i = 0; i < value.length; i++) {
+      if(i > 0 && i % 4 === 0) formatted += ' ';
+      formatted += value[i];
+    }
+    e.target.value = formatted;
+    
+    document.getElementById('cardNumPreview').textContent = formatted || '•••• •••• •••• ••••';
+    
+    // Card Brand Detection
+    const brand = document.getElementById('cardBrand');
+    if(value.startsWith('4')) {
+      brand.textContent = 'VISA';
+      brand.style.color = '#3b82f6';
+    } else if(value.startsWith('5')) {
+      brand.textContent = 'MC';
+      brand.style.color = '#ef4444';
+    } else {
+      brand.textContent = 'CARD';
+      brand.style.color = 'var(--text-muted)';
+    }
+  });
+}
+
+if (cardHolderInput) {
+  cardHolderInput.addEventListener('input', (e) => {
+    document.getElementById('cardHolderPreview').textContent = e.target.value || 'Your Name';
+  });
+}
+
+if (cardExpiryInput) {
+  cardExpiryInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    e.target.value = value;
+    document.getElementById('cardExpiryPreview').textContent = value || 'MM/YY';
+  });
+}
+
+// Clipboard UPI Copy
+function copyUpi() {
+  const upiId = document.getElementById('upiId').textContent;
+  navigator.clipboard.writeText(upiId).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy ID'; }, 2000);
+  });
+}
+
+// Netbanking Select bank
+let selectedNbBank = '';
+function selectBank(element, bankName) {
+  document.querySelectorAll('.nb-bank').forEach(b => b.classList.remove('active'));
+  element.classList.add('active');
+  selectedNbBank = bankName;
+  const nbErr = document.getElementById('nbError');
+  if (nbErr) nbErr.style.display = 'none';
+}
+
+// Payment flows simulations
+function startCardPayment() {
+  const cardNum = cardNumInput.value.replace(/\s+/g, '');
+  const holder = cardHolderInput.value.trim();
+  const expiry = cardExpiryInput.value.trim();
+  const cvv = document.getElementById('cardCvv').value.trim();
+  const cardErr = document.getElementById('cardError');
+  
+  if (cardErr) cardErr.style.display = 'none';
+  
+  if(cardNum.length < 16 || !holder || expiry.length < 5 || cvv.length < 3) {
+    if (cardErr) {
+      cardErr.textContent = '⚠ Please enter valid credit card details.';
+      cardErr.style.display = 'block';
+    }
+    return;
+  }
+  
+  showProcessing('Connecting to Secure Card Network...', () => {
+    openOtpModal();
+  });
+}
+
+// Keep startUpiPayment and startUpiAppPay as needed
+function startUpiPayment() {
+  showProcessing('Waiting for UPI Payment confirmation...', () => {
+    simulateFinalSuccess();
+  });
+}
+
+function startUpiAppPay() {
+  showProcessing('Launching external UPI App context...', () => {
+    simulateFinalSuccess();
+  });
+}
+
+function startNbPayment() {
+  const nbErr = document.getElementById('nbError');
+  if (nbErr) nbErr.style.display = 'none';
+
+  if(!selectedNbBank) {
+    if (nbErr) {
+      nbErr.textContent = '⚠ Please select a Bank to pay with.';
+      nbErr.style.display = 'block';
+    }
+    return;
+  }
+  
+  showProcessing(`Redirecting to secure gateway of ${selectedNbBank}...`, () => {
+    openOtpModal();
+  });
+}
+
+// Processing Overlay Controller
+function showProcessing(statusText, callback) {
+  const overlay = document.getElementById('processingOverlay');
+  const status = document.getElementById('processingStatus');
+  
+  status.textContent = statusText;
+  overlay.classList.add('active');
+  
+  setTimeout(() => {
+    status.textContent = 'Authorizing transaction...';
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      if(callback) callback();
+    }, 1800);
+  }, 1500);
+}
+
+// OTP Dialog System
+let countdownTimer;
+function openOtpModal() {
+  const dialog = document.getElementById('otpDialog');
+  dialog.classList.add('active');
+  
+  const otpErr = document.getElementById('otpError');
+  if (otpErr) otpErr.style.display = 'none';
+  
+  // Clear any existing values and focus first field
+  document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+  document.getElementById('otp1').focus();
+  
+  // Timer Countdown
+  let timeLeft = 59;
+  const timerSpan = document.getElementById('otpCountdown');
+  timerSpan.textContent = timeLeft;
+  
+  clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    timeLeft--;
+    timerSpan.textContent = timeLeft;
+    if(timeLeft <= 0) {
+      clearInterval(countdownTimer);
+      document.querySelector('.otp-timer').textContent = "Didn't receive code? Resend Code";
+      document.querySelector('.otp-timer').style.cursor = 'pointer';
+    }
+  }, 1000);
+}
+
+function closeOtp() {
+  clearInterval(countdownTimer);
+  document.getElementById('otpDialog').classList.remove('active');
+}
+
+// Move cursor on OTP field input
+function moveFocus(current, nextId) {
+  if (current.value.length === 1) {
+    document.getElementById(nextId).focus();
+  }
+}
+
+function verifyOtp() {
+  let otp = '';
+  document.querySelectorAll('.otp-input').forEach(input => otp += input.value);
+  const otpErr = document.getElementById('otpError');
+  
+  if (otpErr) otpErr.style.display = 'none';
+  
+  if(otp.length < 6) {
+    if (otpErr) {
+      otpErr.textContent = '⚠ Please enter the complete 6-digit verification code.';
+      otpErr.style.display = 'block';
+    }
+    return;
+  }
+  
+  closeOtp();
+  
+  // Show processing success
+  const overlay = document.getElementById('processingOverlay');
+  const status = document.getElementById('processingStatus');
+  
+  status.textContent = 'Verifying security token...';
+  overlay.classList.add('active');
+  
+  setTimeout(() => {
+    status.textContent = 'Securing booking slot...';
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      simulateFinalSuccess();
+    }, 1200);
+  }, 1200);
+}
+
+// Final Success Checkmark Animation and Redirect
+function simulateFinalSuccess() {
+  // Replace checkout container content with a beautiful success screen
+  const container = document.querySelector('.checkout-container');
+  container.style.display = 'flex';
+  container.style.flexDirection = 'column';
+  container.style.alignItems = 'center';
+  container.style.justifyContent = 'center';
+  container.style.padding = '5rem 2rem';
+  
+  container.innerHTML = `
+    <div class="success-screen">
+      <div class="checkmark-circle">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-style: italic; font-weight: 300; margin-bottom: 0.8rem;">Welcome to the Ko-Ko Family!</h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 2rem;">Payment authorized. Connecting you back to Koel & Ko...</p>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--gold-light);">Ref: TRANS-AUTHORIZATION-OK</div>
+    </div>
+  `;
+  
+  setTimeout(() => {
+    // Redirect back to main page
+    const returnUrl = `koel-and-ko.html?status=success&plan=${encodeURIComponent(plan)}&amount=${encodeURIComponent(amount)}&name=${encodeURIComponent(clientName)}&email=${encodeURIComponent(email)}`;
+    window.location.href = returnUrl;
+  }, 2200);
+}
+</script>
+
+</body>
+</html>
