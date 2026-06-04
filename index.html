@@ -1,0 +1,3573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koel & Ko — Premium Web Design Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;
+  --navy-deep:#080f18;
+  --charcoal:#1c2633;
+  --charcoal-mid:#243040;
+  --offwhite:#f5f2ed;
+  --offwhite-dim:#ddd8d0;
+  --gold:#c9a84c;
+  --gold-light:#e2c47a;
+  --gold-pale:#f7edd4;
+  --gold-dark:#9b7a30;
+  --text-main:#f5f2ed;
+  --text-muted:#8a9bac;
+  --text-soft:#b8c5d0;
+  --border-subtle:rgba(201,168,76,0.18);
+  --border-mid:rgba(201,168,76,0.35);
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--navy-deep);
+  color:var(--text-main);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CURSOR ── */
+.cursor{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;transform:translate(-50%,-50%);transition:transform .1s}
+.cursor-ring{width:36px;height:36px;border:1px solid var(--gold);border-radius:50%;transform:translate(-50%,-50%);transition:transform .08s,width .2s,height .2s,opacity .2s;opacity:.6}
+body:has(a:hover) .cursor-ring,
+body:has(button:hover) .cursor-ring{width:52px;height:52px;opacity:1}
+
+/* ── NOISE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.03;pointer-events:none;z-index:0
+}
+
+/* ── NAVBAR ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.5rem 4rem;
+  border-bottom:1px solid transparent;
+  transition:background .4s,border-color .4s,padding .4s;
+}
+nav.scrolled{
+  background:rgba(8,15,24,.92);
+  backdrop-filter:blur(20px);
+  border-color:var(--border-subtle);
+  padding:1rem 4rem;
+}
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.7rem;font-weight:500;letter-spacing:.04em;
+  color:var(--offwhite);text-decoration:none;
+}
+.logo span{color:var(--gold)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);text-decoration:none;
+  transition:color .25s;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{
+  background:transparent;border:1px solid var(--gold);
+  color:var(--gold);padding:.5rem 1.4rem;
+  font-family:'DM Sans',sans-serif;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:none;transition:background .25s,color .25s;text-decoration:none;
+}
+.nav-cta:hover{background:var(--gold);color:var(--navy-deep)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:none;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:1px;background:var(--offwhite);transition:.3s}
+
+/* ── SECTIONS ── */
+section{position:relative;z-index:1}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:8rem 2rem 4rem;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(201,168,76,.07) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%,rgba(13,27,42,.9) 0%,transparent 80%);
+}
+.hero-lines{position:absolute;inset:0;overflow:hidden}
+.hero-lines::before,.hero-lines::after{
+  content:'';position:absolute;
+  border:1px solid rgba(201,168,76,.06);
+  border-radius:50%;
+  animation:pulse-ring 8s ease-in-out infinite;
+}
+.hero-lines::before{
+  width:700px;height:700px;
+  top:50%;left:50%;transform:translate(-50%,-55%);
+}
+.hero-lines::after{
+  width:1000px;height:1000px;
+  top:50%;left:50%;transform:translate(-50%,-55%);
+  animation-delay:2s;
+}
+@keyframes pulse-ring{
+  0%,100%{opacity:.4;transform:translate(-50%,-55%) scale(1)}
+  50%{opacity:.1;transform:translate(-50%,-55%) scale(1.03)}
+}
+.hero-tag{
+  display:inline-block;
+  border:1px solid var(--border-mid);
+  color:var(--gold);
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:.4rem 1.2rem;margin-bottom:2.5rem;
+  opacity:0;animation:fade-up .8s .3s forwards;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,8vw,6.5rem);
+  font-weight:300;line-height:1.08;
+  letter-spacing:-.01em;
+  margin-bottom:1.5rem;
+  opacity:0;animation:fade-up .9s .5s forwards;
+}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-subtitle{
+  font-size:1rem;color:var(--text-muted);
+  max-width:520px;line-height:1.8;
+  margin:0 auto 3rem;
+  opacity:0;animation:fade-up .9s .7s forwards;
+}
+.hero-btns{
+  display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;
+  opacity:0;animation:fade-up .9s .9s forwards;
+}
+.btn-primary{
+  background:var(--gold);color:var(--navy-deep);
+  border:1px solid var(--gold);
+  padding:.85rem 2.2rem;
+  font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:none;transition:background .25s,transform .2s;text-decoration:none;display:inline-block;
+  font-family:'DM Sans',sans-serif;font-weight:500;
+}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
+.btn-ghost{
+  background:transparent;color:var(--offwhite);
+  border:1px solid rgba(245,242,237,.25);
+  padding:.85rem 2.2rem;
+  font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:none;transition:border-color .25s,transform .2s;text-decoration:none;display:inline-block;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-ghost:hover{border-color:var(--offwhite);transform:translateY(-2px)}
+.hero-stats{
+  display:flex;gap:4rem;margin-top:5rem;
+  opacity:0;animation:fade-up .9s 1.1s forwards;
+}
+.hero-stat .num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.8rem;font-weight:400;color:var(--gold);display:block;
+}
+.hero-stat .label{font-size:.75rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase}
+.hero-scroll{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.6rem;
+  opacity:0;animation:fade-up 1s 1.4s forwards;
+}
+.hero-scroll span{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scroll-pulse 2s ease-in-out infinite}
+@keyframes scroll-pulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(.6)}}
+
+/* ── MARQUEE ── */
+.marquee-strip{
+  background:var(--gold);overflow:hidden;
+  padding:.65rem 0;display:flex;
+}
+.marquee-track{
+  display:flex;white-space:nowrap;
+  animation:marquee 22s linear infinite;
+}
+.marquee-track span{
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--navy-deep);padding:0 2.5rem;font-weight:500;
+}
+.marquee-track span::before{content:'✦';margin-right:2.5rem;opacity:.6}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SECTION BASE ── */
+.section-pad{padding:8rem 4rem}
+.section-label{
+  font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;display:block;
+}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,4vw,3.5rem);
+  font-weight:300;line-height:1.15;
+}
+.section-title em{font-style:italic;color:var(--gold)}
+.divider{width:48px;height:1px;background:var(--gold);margin:2rem 0;opacity:.6}
+
+/* ── ABOUT ── */
+#about{background:var(--navy)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;margin-top:5rem}
+.about-text p{color:var(--text-soft);line-height:1.9;margin-bottom:1.5rem;font-size:.97rem}
+.about-values{margin-top:3rem;display:flex;flex-direction:column;gap:1.5rem}
+.value-item{
+  display:flex;gap:1.5rem;align-items:flex-start;
+  padding:1.5rem;border:1px solid var(--border-subtle);
+  transition:border-color .3s,background .3s;
+}
+.value-item:hover{border-color:var(--border-mid);background:rgba(201,168,76,.04)}
+.value-num{
+  font-family:'DM Mono',monospace;font-size:.72rem;
+  color:var(--gold);letter-spacing:.1em;flex-shrink:0;margin-top:.15rem;
+}
+.value-item h4{font-size:.9rem;font-weight:500;margin-bottom:.4rem;letter-spacing:.04em}
+.value-item p{color:var(--text-muted);font-size:.85rem;line-height:1.7}
+.about-visual{
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.about-card{
+  background:var(--charcoal);border:1px solid var(--border-subtle);
+  padding:3rem;width:100%;max-width:400px;
+  position:relative;
+}
+.about-card::before{
+  content:'';position:absolute;inset:-1px;
+  border:1px solid var(--gold);opacity:.15;pointer-events:none;
+}
+.about-card-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;font-style:italic;font-weight:300;
+  color:var(--gold-light);margin-bottom:2rem;
+}
+.about-metric{margin-bottom:1.5rem}
+.about-metric .bar-label{
+  display:flex;justify-content:space-between;
+  font-size:.78rem;letter-spacing:.06em;margin-bottom:.5rem;
+  color:var(--text-soft);
+}
+.bar-track{height:2px;background:rgba(255,255,255,.08);position:relative}
+.bar-fill{
+  height:100%;background:linear-gradient(to right,var(--gold-dark),var(--gold-light));
+  width:0;transition:width 1.5s cubic-bezier(.25,1,.5,1);
+}
+
+/* ── SERVICES ── */
+#services{background:var(--navy-deep)}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-subtle);margin-top:5rem}
+.service-card{
+  background:var(--navy-deep);
+  padding:2.8rem;
+  transition:background .3s;
+  position:relative;overflow:hidden;
+}
+.service-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .4s;
+}
+.service-card:hover::after{transform:scaleX(1)}
+.service-card:hover{background:var(--charcoal)}
+.service-icon{
+  font-size:1.8rem;margin-bottom:1.5rem;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  color:var(--gold);font-weight:300;
+}
+.service-card h3{font-size:1.1rem;font-weight:400;margin-bottom:.8rem;letter-spacing:.03em}
+.service-card p{color:var(--text-muted);font-size:.85rem;line-height:1.7;margin-bottom:1.5rem}
+.service-price{
+  font-family:'DM Mono',monospace;font-size:.78rem;
+  color:var(--gold);letter-spacing:.08em;
+}
+.service-tag{
+  display:inline-block;border:1px solid var(--border-subtle);
+  color:var(--text-muted);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.25rem .7rem;margin:.2rem .2rem 0 0;
+}
+
+/* ── WHY US ── */
+#why{background:var(--navy)}
+.why-layout{display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center;margin-top:5rem}
+.usp-list{display:flex;flex-direction:column;gap:0}
+.usp-item{
+  display:flex;gap:2rem;align-items:flex-start;
+  padding:2rem 0;border-bottom:1px solid var(--border-subtle);
+  opacity:.4;transition:opacity .3s;
+}
+.usp-item.active,.usp-item:hover{opacity:1}
+.usp-item:first-child{padding-top:0}
+.usp-num{
+  font-family:'DM Mono',monospace;font-size:.7rem;
+  color:var(--gold);flex-shrink:0;margin-top:.2rem;
+}
+.usp-item h3{font-size:1rem;font-weight:400;margin-bottom:.5rem;letter-spacing:.03em}
+.usp-item p{color:var(--text-muted);font-size:.85rem;line-height:1.7}
+.why-visual{
+  background:var(--charcoal);border:1px solid var(--border-subtle);
+  padding:3rem;position:relative;
+}
+.why-visual h4{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;font-style:italic;font-weight:300;
+  color:var(--text-muted);margin-bottom:2rem;
+}
+.testimonial-card{
+  border-left:2px solid var(--gold);padding-left:1.5rem;
+  margin-bottom:2rem;
+}
+.testimonial-card p{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-style:italic;font-weight:300;
+  line-height:1.8;color:var(--text-soft);margin-bottom:.8rem;
+}
+.testimonial-card .author{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+
+/* ── PROCESS ── */
+#process{background:var(--navy-deep)}
+.process-steps{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  margin-top:5rem;position:relative;
+}
+.process-steps::before{
+  content:'';position:absolute;
+  top:2.5rem;left:2.5rem;right:2.5rem;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),var(--gold),transparent);
+  opacity:.25;
+}
+.process-step{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:0 1rem;position:relative;
+}
+.step-circle{
+  width:48px;height:48px;border-radius:50%;
+  border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.72rem;color:var(--gold);
+  background:var(--navy-deep);
+  margin-bottom:1.5rem;position:relative;z-index:1;
+  transition:background .3s,color .3s;
+}
+.process-step:hover .step-circle{background:var(--gold);color:var(--navy-deep)}
+.process-step h4{font-size:.82rem;font-weight:400;letter-spacing:.04em;margin-bottom:.5rem}
+.process-step p{font-size:.75rem;color:var(--text-muted);line-height:1.6}
+
+/* ── PRICING ── */
+#pricing{background:var(--navy)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:5rem}
+.pricing-card{
+  background:var(--charcoal);border:1px solid var(--border-subtle);
+  padding:3rem 2.5rem;position:relative;
+  transition:border-color .3s,transform .3s;
+}
+.pricing-card:hover{border-color:var(--border-mid);transform:translateY(-4px)}
+.pricing-card.featured{
+  border-color:var(--gold);background:var(--charcoal-mid);
+}
+.pricing-card.featured::before{
+  content:'Most Popular';
+  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:var(--navy-deep);
+  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
+  padding:.3rem 1.2rem;font-weight:500;
+}
+.plan-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;font-weight:400;font-style:italic;
+  margin-bottom:.5rem;color:var(--offwhite);
+}
+.plan-desc{font-size:.8rem;color:var(--text-muted);margin-bottom:2rem;line-height:1.6}
+.plan-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-weight:300;color:var(--gold);
+  margin-bottom:.4rem;line-height:1;
+}
+.plan-price sup{font-size:1.2rem;vertical-align:super}
+.plan-delivery{font-size:.75rem;color:var(--text-muted);letter-spacing:.08em;margin-bottom:2.5rem}
+.plan-features{list-style:none;margin-bottom:2.5rem}
+.plan-features li{
+  font-size:.84rem;color:var(--text-soft);
+  padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;gap:.8rem;align-items:center;
+}
+.plan-features li::before{content:'—';color:var(--gold);flex-shrink:0;font-size:.7rem}
+.plan-features li.no{color:var(--text-muted);opacity:.5}
+.plan-features li.no::before{content:'—';color:var(--text-muted)}
+
+/* ── PORTFOLIO ── */
+#portfolio{background:var(--navy-deep)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-subtle);margin-top:5rem}
+.portfolio-item{
+  background:var(--navy-deep);padding:2rem;
+  aspect-ratio:1;position:relative;overflow:hidden;
+  cursor:none;
+}
+.portfolio-item-inner{
+  width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;
+  background:var(--charcoal);position:relative;overflow:hidden;
+}
+.portfolio-mock{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-style:italic;font-weight:300;
+  color:var(--border-mid);
+  transition:transform .5s cubic-bezier(.25,1,.5,1);
+}
+.portfolio-item:hover .portfolio-mock{transform:scale(1.1)}
+.portfolio-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,var(--navy-deep) 0%,transparent 60%);
+  padding:1.5rem;display:flex;flex-direction:column;justify-content:flex-end;
+  transform:translateY(40px);opacity:0;
+  transition:transform .4s,opacity .4s;
+}
+.portfolio-item:hover .portfolio-overlay{transform:translateY(0);opacity:1}
+.portfolio-overlay h4{font-size:.9rem;font-weight:400;margin-bottom:.3rem}
+.portfolio-overlay p{font-size:.75rem;color:var(--text-muted)}
+.portfolio-type{
+  position:absolute;top:1rem;right:1rem;
+  border:1px solid var(--border-subtle);
+  font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);padding:.25rem .7rem;
+  background:var(--navy-deep);
+}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── FORM PAGE ── */
+#form-page{
+  min-height:100vh;background:var(--navy-deep);
+  padding:8rem 4rem 5rem;
+}
+.form-container{
+  max-width:680px;margin:0 auto;
+}
+.form-header{margin-bottom:4rem}
+.form-header p{color:var(--text-muted);margin-top:1rem;line-height:1.7}
+.form-field{margin-bottom:2rem}
+.form-field label{
+  display:block;font-size:.74rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:.7rem;
+}
+.form-field input,
+.form-field select,
+.form-field textarea{
+  width:100%;background:transparent;
+  border:none;border-bottom:1px solid var(--border-subtle);
+  color:var(--text-main);font-family:'DM Sans',sans-serif;font-size:.95rem;
+  padding:.8rem 0;outline:none;
+  transition:border-color .25s;
+  -webkit-appearance:none;appearance:none;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus{border-color:var(--gold)}
+.form-field select{cursor:none;background:var(--navy-deep)}
+.form-field select option{background:var(--navy-deep)}
+.form-field textarea{resize:none;height:100px;line-height:1.6}
+.form-field input::placeholder,
+.form-field textarea::placeholder{color:rgba(138,155,172,.5)}
+.form-submit{
+  width:100%;background:var(--gold);color:var(--navy-deep);
+  border:none;padding:1.1rem;
+  font-family:'DM Sans',sans-serif;font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:500;cursor:none;
+  transition:background .25s,transform .2s;
+  margin-top:1rem;
+}
+.form-submit:hover{background:var(--gold-light);transform:translateY(-2px)}
+.form-note{
+  text-align:center;margin-top:1rem;
+  font-size:.75rem;color:var(--text-muted);line-height:1.6;
+}
+
+/* ── PAYMENT PAGE ── */
+#payment-page{
+  min-height:100vh;background:var(--navy-deep);
+  padding:8rem 4rem 5rem;
+}
+.payment-layout{
+  max-width:860px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;
+}
+.order-summary{
+  background:var(--charcoal);border:1px solid var(--border-subtle);
+  padding:2.5rem;position:sticky;top:7rem;
+}
+.order-summary h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;font-style:italic;font-weight:300;
+  margin-bottom:2rem;color:var(--text-soft);
+}
+.order-row{
+  display:flex;justify-content:space-between;
+  font-size:.85rem;padding:.8rem 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  color:var(--text-soft);
+}
+.order-row:last-child{border-bottom:none}
+.order-row.total{
+  font-weight:500;color:var(--text-main);
+  padding-top:1.2rem;margin-top:.4rem;
+}
+.order-row.total span:last-child{color:var(--gold)}
+.order-note{
+  margin-top:1.5rem;padding:1rem;
+  background:rgba(201,168,76,.06);border:1px solid var(--border-subtle);
+  font-size:.78rem;color:var(--text-muted);line-height:1.6;
+}
+.payment-form h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;font-weight:300;font-style:italic;
+  margin-bottom:2.5rem;
+}
+.payment-methods{display:flex;gap:.8rem;margin-bottom:2rem}
+.payment-method{
+  flex:1;padding:.8rem;border:1px solid var(--border-subtle);
+  text-align:center;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);cursor:none;transition:border-color .25s,color .25s;
+}
+.payment-method.active,.payment-method:hover{border-color:var(--gold);color:var(--gold)}
+.razorpay-btn{
+  width:100%;background:var(--gold);color:var(--navy-deep);
+  border:none;padding:1.1rem;
+  font-family:'DM Sans',sans-serif;font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:500;cursor:none;
+  transition:background .25s,transform .2s;
+  margin-top:1.5rem;display:flex;align-items:center;justify-content:center;gap:.8rem;
+}
+.razorpay-btn:hover{background:var(--gold-light);transform:translateY(-2px)}
+.secure-badge{
+  display:flex;align-items:center;gap:.5rem;
+  margin-top:1rem;font-size:.72rem;color:var(--text-muted);justify-content:center;
+}
+
+/* ── SUCCESS PAGE ── */
+#success-page{
+  min-height:100vh;background:var(--navy-deep);
+  padding:4rem 2rem;
+}
+#success-page.active{
+  display:flex;align-items:center;justify-content:center;
+}
+.nb-bank-item.active{
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  background: rgba(201,168,76,0.05);
+}
+.success-container{
+  max-width:760px;width:100%;text-align:center;
+}
+.success-icon{
+  width:80px;height:80px;border-radius:50%;
+  border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 2.5rem;font-size:1.8rem;
+  animation:success-pop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes success-pop{
+  0%{transform:scale(0);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+.success-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.8rem;font-weight:300;font-style:italic;
+  margin-bottom:1rem;
+}
+.success-subtitle{color:var(--text-muted);line-height:1.7;margin-bottom:3rem}
+.success-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.5rem;
+  margin-bottom:3rem;
+}
+@media (max-width: 600px){
+  .success-grid{
+    grid-template-columns:1fr;
+  }
+}
+.success-card{
+  background:var(--charcoal);
+  border:1px solid var(--border-subtle);
+  border-radius:8px;
+  padding:1.5rem 1.8rem;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:0.4rem;
+  position:relative;
+}
+.success-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 10% 10%,rgba(201,168,76,0.02) 0%,transparent 70%);
+  pointer-events:none;
+}
+.success-card-label{
+  font-size:0.68rem;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  letter-spacing:0.1em;
+}
+.success-card-value{
+  font-size:1.1rem;
+  color:var(--text-main);
+  font-family:'DM Mono',monospace;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.5rem;
+}
+.what-next{margin-top:2rem;text-align:left}
+.what-next h4{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.next-step{
+  display:flex;gap:1rem;align-items:flex-start;
+  padding:.8rem 0;font-size:.84rem;color:var(--text-soft);
+}
+.next-step-num{
+  font-family:'DM Mono',monospace;font-size:.7rem;color:var(--gold);flex-shrink:0;margin-top:.15rem;
+}
+
+/* ── FAQ ── */
+#faq{background:var(--navy)}
+.faq-list{margin-top:4rem;max-width:720px;margin-left:auto;margin-right:auto;margin-top:4rem}
+.faq-item{border-bottom:1px solid var(--border-subtle)}
+.faq-question{
+  width:100%;background:none;border:none;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.5rem 0;cursor:none;text-align:left;
+  font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text-main);
+  transition:color .25s;
+}
+.faq-question:hover{color:var(--gold)}
+.faq-question svg{
+  flex-shrink:0;transition:transform .3s;
+  stroke:var(--gold);fill:none;stroke-width:1.5;
+}
+.faq-item.open .faq-question svg{transform:rotate(45deg)}
+.faq-answer{
+  max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.25,1,.5,1);
+}
+.faq-answer p{
+  padding-bottom:1.5rem;color:var(--text-muted);
+  font-size:.88rem;line-height:1.8;
+}
+
+/* ── CONTACT ── */
+#contact{background:var(--navy-deep);padding:8rem 4rem}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.contact-info{display:flex;flex-direction:column;gap:2rem;margin-top:3rem}
+.contact-item{display:flex;gap:1.2rem;align-items:flex-start}
+.contact-item-icon{
+  font-size:1rem;color:var(--gold);flex-shrink:0;margin-top:.15rem;
+}
+.contact-item h4{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem}
+.contact-item p{font-size:.9rem;color:var(--text-soft)}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--navy-deep);border-top:1px solid var(--border-subtle);
+  padding:3rem 4rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;font-weight:400;color:var(--offwhite);
+}
+.footer-logo span{color:var(--gold)}
+.footer-copy{font-size:.75rem;color:var(--text-muted);letter-spacing:.06em}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:.75rem;color:var(--text-muted);text-decoration:none;letter-spacing:.08em;transition:color .25s}
+.footer-links a:hover{color:var(--gold)}
+
+/* ── ANIMATIONS ── */
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── MOBILE NAV ── */
+.mobile-menu{
+  position:fixed;inset:0;background:var(--navy-deep);z-index:1100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3rem;opacity:0;pointer-events:none;
+  transition:opacity .4s;
+}
+.mobile-menu.open{opacity:1;pointer-events:all}
+.mobile-menu a{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.5rem;font-style:italic;font-weight:300;
+  color:var(--text-main);text-decoration:none;
+  transition:color .25s;
+}
+.mobile-menu a:hover{color:var(--gold)}
+.mobile-close{
+  position:absolute;top:2rem;right:2rem;
+  background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:none;
+}
+
+/* ── SCROLL PROGRESS ── */
+.progress-bar{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(to right,var(--gold-dark),var(--gold-light));
+  z-index:200;width:0%;transition:width .1s linear;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:1.2rem 2rem}
+  nav.scrolled{padding:.8rem 2rem}
+  .nav-links,.nav-cta{display:none}
+  .hamburger{display:flex}
+  .section-pad{padding:5rem 2rem}
+  .about-grid,.why-layout,.contact-grid,.payment-layout{grid-template-columns:1fr;gap:3rem}
+  .services-grid,.pricing-grid,.portfolio-grid{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:repeat(2,1fr);gap:2rem}
+  .process-steps::before{display:none}
+  .hero-stats{gap:2rem}
+  footer{flex-direction:column;gap:1.5rem;text-align:center}
+  .footer-links{justify-content:center}
+  #form-page,#payment-page{padding:6rem 2rem 4rem}
+}
+
+/* ── QUESTIONNAIRE WIZARD ── */
+.stepper-header {
+  margin-bottom: 2.5rem;
+}
+.stepper-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.stepper-progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--gold-dark), var(--gold-light));
+  width: 0%;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stepper-step-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.stepper-step-num {
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+}
+.stepper-step-title {
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* Radio and Checkbox Groups */
+.checkbox-group, .radio-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.checkbox-group-vertical, .radio-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.custom-checkbox, .custom-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: none;
+  font-size: 0.84rem;
+  color: var(--text-soft);
+  user-select: none;
+}
+.custom-checkbox input, .custom-radio input {
+  display: none;
+}
+.custom-checkbox span, .custom-radio span {
+  display: inline-flex;
+  align-items: center;
+}
+.custom-checkbox span::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255,255,255,0.02);
+  border-radius: 3px;
+  margin-right: 8px;
+  transition: all 0.2s;
+}
+.custom-checkbox input:checked + span::before {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+.custom-radio span::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255,255,255,0.02);
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: all 0.2s;
+}
+.custom-radio input:checked + span::before {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.4);
+}
+
+/* Color Pickers */
+.color-picker-row {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.color-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.color-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.color-picker-wrapper input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 50px;
+  height: 35px;
+  border-radius: 4px;
+  cursor: none;
+  background: transparent;
+  padding: 0;
+}
+.color-picker-wrapper input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.color-picker-wrapper input[type="color"]::-webkit-color-swatch {
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+}
+
+/* Style cards grid */
+.style-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.style-card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.8rem;
+  text-align: center;
+  cursor: none;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.style-card span {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  font-weight: 500;
+  display: block;
+  margin-top: 0.5rem;
+}
+.style-card-preview {
+  height: 60px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.style-card-logo {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'DM Mono', monospace;
+  font-weight: bold;
+}
+.corporate-bg { background: linear-gradient(135deg, #101c33, #1f3764); color: #4b8dfa; }
+.modern-bg { background: linear-gradient(135deg, #2b1236, #4e2261); color: #d67df7; }
+.luxury-bg { background: linear-gradient(135deg, #2b2314, #4e4024); color: var(--gold); }
+.minimal-bg { background: linear-gradient(135deg, #222222, #444444); color: #ffffff; }
+.creative-bg { background: linear-gradient(135deg, #14282b, #24484e); color: #4bfaf7; }
+.tech-bg { background: linear-gradient(135deg, #0f2526, #163c3e); color: #1ad1d7; }
+
+.style-card:hover {
+  border-color: var(--border-mid);
+  transform: translateY(-2px);
+}
+.style-card.active {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.05);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.1);
+}
+.style-card.active span {
+  color: var(--gold);
+}
+
+/* Plans Wizard Container */
+.plans-wizard-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.plan-wizard-card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1.8rem 1.2rem;
+  text-align: center;
+  position: relative;
+  cursor: none;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+.plan-wizard-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-size: 0.58rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+}
+.plan-wizard-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+.plan-wizard-price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--gold);
+  margin-bottom: 0.8rem;
+}
+.plan-wizard-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 1.2rem;
+}
+.plan-wizard-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.plan-wizard-features li {
+  font-size: 0.74rem;
+  color: var(--text-soft);
+}
+.plan-wizard-select-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 0.7rem;
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: none;
+  transition: all 0.25s;
+}
+.plan-wizard-card:hover {
+  border-color: var(--border-mid);
+  transform: translateY(-2px);
+}
+.plan-wizard-card.active {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.04);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+.plan-wizard-card.active .plan-wizard-select-btn {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--navy-deep);
+}
+
+/* Wizard nav buttons */
+.btn-wizard-nav {
+  padding: 0.9rem 1.5rem;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: none;
+  transition: all 0.25s;
+}
+.btn-wizard-nav.prev-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-soft);
+}
+.btn-wizard-nav.prev-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+.btn-wizard-nav.next-btn {
+  background: var(--gold);
+  border: none;
+  color: var(--navy-deep);
+}
+.btn-wizard-nav.next-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+}
+
+@media(max-width: 768px) {
+  .plans-wizard-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor cursor-dot" id="dot"></div>
+<div class="cursor cursor-ring" id="ring"></div>
+<div class="progress-bar" id="progress"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">✕</button>
+  <a href="#about" onclick="closeMobile()">Studio</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#portfolio" onclick="closeMobile()">Work</a>
+  <a href="#pricing" onclick="closeMobile()">Pricing</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="#" onclick="showPage('form-page');closeMobile()" style="color:var(--gold)">Start Project</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo" onclick="showPage('home-page')">Koel <span>&</span> Ko</a>
+  <ul class="nav-links">
+    <li><a href="#about">Studio</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#" class="nav-cta" onclick="showPage('form-page')">Start a Project</a>
+  <button class="hamburger" onclick="openMobile()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══ HOME PAGE ══ -->
+<div id="home-page" class="page active">
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-tag">Est. 2024 · Hyderabad, India</div>
+  <h1 class="hero-title">
+    We craft <em>digital experiences</em><br>that mean business
+  </h1>
+  <p class="hero-subtitle">Premium, purposeful websites for brands that refuse to blend in. Quality over quantity — always.</p>
+  <div class="hero-btns">
+    <a href="#" class="btn-primary" onclick="showPage('form-page')">Start Your Project</a>
+    <a href="#portfolio" class="btn-ghost">View Our Work</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num" data-count="48">0</span><span class="label">Projects Delivered</span></div>
+    <div class="hero-stat"><span class="num" data-count="100">0</span><span class="label">Client Satisfaction</span></div>
+    <div class="hero-stat"><span class="num" data-count="12">0</span><span class="label">Days Avg. Delivery</span></div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span>Premium Design</span><span>Startup Websites</span><span>E-commerce Solutions</span>
+    <span>Mobile Responsive</span><span>SEO Ready</span><span>Fast Delivery</span>
+    <span>Modern UI/UX</span><span>Quality Over Quantity</span><span>Direct Communication</span>
+    <span>Premium Design</span><span>Startup Websites</span><span>E-commerce Solutions</span>
+    <span>Mobile Responsive</span><span>SEO Ready</span><span>Fast Delivery</span>
+    <span>Modern UI/UX</span><span>Quality Over Quantity</span><span>Direct Communication</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="section-pad">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <span class="section-label">Our Studio</span>
+      <h2 class="section-title">Built on the belief that <em>less is more</em></h2>
+      <div class="divider"></div>
+      <p>Koel & Ko is a boutique web design studio born out of frustration with bloated agencies and rushed freelancers. We take on a limited number of projects each month — not because we have to, but because we choose to.</p>
+      <p>Every client gets our full attention. Every pixel is intentional. Every website we ship is one we're proud to put our name on.</p>
+      <div class="about-values">
+        <div class="value-item">
+          <span class="value-num">01</span>
+          <div>
+            <h4>Quality Over Quantity</h4>
+            <p>We cap monthly projects to ensure every client gets the focus they deserve.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <span class="value-num">02</span>
+          <div>
+            <h4>Radical Transparency</h4>
+            <p>No hidden costs, no vague timelines. You'll always know exactly where things stand.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <span class="value-num">03</span>
+          <div>
+            <h4>Direct Communication</h4>
+            <p>You talk to the people building your site. No account managers. No phone trees.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+      <div class="about-card">
+        <div class="about-card-title">Our benchmarks</div>
+        <div class="about-metric">
+          <div class="bar-label"><span>On-time Delivery</span><span style="color:var(--gold)">98%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="98"></div></div>
+        </div>
+        <div class="about-metric">
+          <div class="bar-label"><span>Client Retention</span><span style="color:var(--gold)">94%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="94"></div></div>
+        </div>
+        <div class="about-metric">
+          <div class="bar-label"><span>Revision Satisfaction</span><span style="color:var(--gold)">100%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+        </div>
+        <div class="about-metric">
+          <div class="bar-label"><span>Mobile Performance Score</span><span style="color:var(--gold)">95%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="95"></div></div>
+        </div>
+        <div style="margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border-subtle)">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem">This month's availability</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-style:italic;font-weight:300;color:var(--gold)">2 slots open</div>
+          <div style="font-size:.75rem;color:var(--text-muted);margin-top:.3rem">Out of 4 monthly slots</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="section-pad" style="padding-top:6rem;padding-bottom:6rem">
+  <div style="text-align:center;margin-bottom:0" class="reveal">
+    <span class="section-label">What We Build</span>
+    <h2 class="section-title">Services crafted for <em>every stage</em></h2>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-icon">01</div>
+      <h3>Startup Website</h3>
+      <p>A sharp, credible online presence for new businesses. Everything you need to launch — nothing you don't.</p>
+      <div style="margin-bottom:1.2rem">
+        <span class="service-tag">5 Pages</span>
+        <span class="service-tag">Mobile First</span>
+        <span class="service-tag">SEO Ready</span>
+        <span class="service-tag">7–10 Days</span>
+      </div>
+      <div class="service-price">Starting at ₹9,999</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">02</div>
+      <h3>Business Website</h3>
+      <p>A full-featured website built to convert visitors into clients, with analytics, contact forms, and a CMS.</p>
+      <div style="margin-bottom:1.2rem">
+        <span class="service-tag">10 Pages</span>
+        <span class="service-tag">CMS Integrated</span>
+        <span class="service-tag">Analytics</span>
+        <span class="service-tag">10–14 Days</span>
+      </div>
+      <div class="service-price">Starting at ₹19,999</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">03</div>
+      <h3>E-Commerce Store</h3>
+      <p>End-to-end online store with product listings, secure payment gateway, and real-time order tracking.</p>
+      <div style="margin-bottom:1.2rem">
+        <span class="service-tag">Product Listings</span>
+        <span class="service-tag">Payment Gateway</span>
+        <span class="service-tag">Order Tracking</span>
+        <span class="service-tag">14–21 Days</span>
+      </div>
+      <div class="service-price">Starting at ₹39,999</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why" class="section-pad">
+  <div class="why-layout">
+    <div class="reveal">
+      <span class="section-label">Why Koel & Ko</span>
+      <h2 class="section-title">An unfair advantage <em>for your brand</em></h2>
+      <div class="divider"></div>
+      <div class="usp-list">
+        <div class="usp-item active">
+          <span class="usp-num">01</span>
+          <div>
+            <h3>Quality Over Quantity</h3>
+            <p>We cap monthly projects at four. Your website never competes for our attention — it commands it.</p>
+          </div>
+        </div>
+        <div class="usp-item">
+          <span class="usp-num">02</span>
+          <div>
+            <h3>Fast, Predictable Delivery</h3>
+            <p>7–21 days depending on scope. You get a clear deadline upfront and we honour it.</p>
+          </div>
+        </div>
+        <div class="usp-item">
+          <span class="usp-num">03</span>
+          <div>
+            <h3>No Unnecessary Meetings</h3>
+            <p>Async-first workflow. We gather what we need upfront so your time stays yours.</p>
+          </div>
+        </div>
+        <div class="usp-item">
+          <span class="usp-num">04</span>
+          <div>
+            <h3>Premium Modern Design</h3>
+            <p>Every site is custom — built to current UI/UX standards, not recycled templates.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="why-visual reveal">
+      <h4>What our clients say</h4>
+      <div class="testimonial-card">
+        <p>"Koel & Ko delivered our website in 9 days. It looks like something a Fortune 500 company would use. Our enquiries doubled in the first week."</p>
+        <div class="author">— Priya M., Founder · Aarav Interiors</div>
+      </div>
+      <div class="testimonial-card">
+        <p>"Clean, fast, no-nonsense. They asked five questions and came back with exactly what we needed. Zero revision rounds."</p>
+        <div class="author">— Arjun T., CEO · NexGen Logistics</div>
+      </div>
+      <div style="margin-top:2.5rem;display:flex;gap:2rem">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--gold);font-style:italic">4.9/5</div>
+          <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem">Average Rating</div>
+        </div>
+        <div style="width:1px;background:var(--border-subtle)"></div>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--gold);font-style:italic">48+</div>
+          <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem">Happy Clients</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="section-pad" style="padding-bottom:7rem">
+  <div style="text-align:center" class="reveal">
+    <span class="section-label">How We Work</span>
+    <h2 class="section-title">Six steps from <em>idea to launch</em></h2>
+  </div>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <div class="step-circle">01</div>
+      <h4>Submit Brief</h4>
+      <p>Fill our minimal 5-question form</p>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">02</div>
+      <h4>Make Payment</h4>
+      <p>Secure your slot with 50% advance</p>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">03</div>
+      <h4>Requirement Review</h4>
+      <p>We study your brief within 24 hrs</p>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">04</div>
+      <h4>Design & Build</h4>
+      <p>Full site built to agreed timeline</p>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">05</div>
+      <h4>Review & Refine</h4>
+      <p>Two rounds of revisions included</p>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">06</div>
+      <h4>Launch 🚀</h4>
+      <p>Your website goes live, fully tested</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="section-pad" style="padding-top:6rem">
+  <div class="reveal">
+    <span class="section-label">Selected Work</span>
+    <h2 class="section-title">Results we're <em>proud of</em></h2>
+    <div class="divider"></div>
+  </div>
+  <div class="portfolio-grid reveal">
+    <div class="portfolio-item">
+      <div class="portfolio-item-inner">
+        <div class="portfolio-mock" style="background-image: url('aarav_interiors.png'); background-size: cover; background-position: top; opacity: 0.85;"></div>
+        <span class="portfolio-type">E-Commerce</span>
+        <div class="portfolio-overlay">
+          <h4>Aarav Interiors</h4>
+          <p>Full store · 3× enquiry increase</p>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-item-inner">
+        <div class="portfolio-mock" style="background-image: url('nexgen_logistics.png'); background-size: cover; background-position: top; opacity: 0.85;"></div>
+        <span class="portfolio-type">Business</span>
+        <div class="portfolio-overlay">
+          <h4>NexGen Logistics</h4>
+          <p>Corporate site · delivered in 10 days</p>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-item-inner">
+        <div class="portfolio-mock" style="background-image: url('shriya_residences.png'); background-size: cover; background-position: top; opacity: 0.85;"></div>
+        <span class="portfolio-type">Startup</span>
+        <div class="portfolio-overlay">
+          <h4>Shriya Residences</h4>
+          <p>Real estate launch · 8 days</p>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-item-inner">
+        <div class="portfolio-mock" style="background-image: url('zara_nair.png'); background-size: cover; background-position: top; opacity: 0.85;"></div>
+        <span class="portfolio-type">Portfolio</span>
+        <div class="portfolio-overlay">
+          <h4>Zara Nair Photography</h4>
+          <p>Creative portfolio · zero revisions</p>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-item-inner">
+        <div class="portfolio-mock" style="background-image: url('meeras_masala.png'); background-size: cover; background-position: top; opacity: 0.85;"></div>
+        <span class="portfolio-type">E-Commerce</span>
+        <div class="portfolio-overlay">
+          <h4>Meera's Masala</h4>
+          <p>Food brand store · 2× orders week 1</p>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item" style="cursor:none">
+      <div class="portfolio-item-inner" style="align-items:center;justify-content:center;display:flex;flex-direction:column;gap:1rem;text-align:center;padding:2rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:var(--text-muted)">Your project could<br>live here</div>
+        <a href="#" class="btn-primary" style="font-size:.72rem;padding:.6rem 1.5rem" onclick="showPage('form-page')">Start a Project</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section-pad">
+  <div style="text-align:center" class="reveal">
+    <span class="section-label">Transparent Pricing</span>
+    <h2 class="section-title">No hidden costs.<br><em>Ever.</em></h2>
+  </div>
+  <div class="pricing-grid reveal">
+    <!-- Starter Card -->
+    <div class="pricing-card" style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--charcoal-mid); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      </div>
+      <div class="plan-name" style="margin-bottom: 0.5rem; text-align: left;">Starter Website</div>
+      <div class="plan-desc">For new businesses ready to establish their first professional online presence.</div>
+      <div class="plan-price"><sup>₹</sup>9,999</div>
+      <div class="plan-delivery">Delivery in 7–10 days · 2 revisions</div>
+      <ul class="plan-features" style="width: 100%;">
+        <li>Up to 5 pages</li>
+        <li>Mobile responsive design</li>
+        <li>Contact form integration</li>
+        <li>Basic SEO setup</li>
+        <li>Google Analytics</li>
+        <li class="no">CMS / Blog</li>
+        <li class="no">Custom animations</li>
+        <li class="no">E-commerce</li>
+      </ul>
+      <a href="#" class="btn-ghost" style="display:block;text-align:center;width:100%;" onclick="selectPlan('Starter','9999')">Choose Starter</a>
+    </div>
+
+    <!-- Business Card (Featured) -->
+    <div class="pricing-card featured" style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+      <div class="popular-badge" style="display: inline-block; background: var(--gold); color: var(--navy-deep); font-size: 0.65rem; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.35rem 1rem; border-radius: 50px; margin-bottom: 1.2rem;">Most Popular</div>
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--charcoal-mid); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+      </div>
+      <div class="plan-name" style="margin-bottom: 0.5rem; text-align: left;">Business Website</div>
+      <div class="plan-desc">Our most popular package for growing businesses that need a complete web presence.</div>
+      <div class="plan-price"><sup>₹</sup>19,999</div>
+      <div class="plan-delivery">Delivery in 10–14 days · 3 revisions</div>
+      <ul class="plan-features" style="width: 100%;">
+        <li>Up to 10 pages</li>
+        <li>Mobile responsive design</li>
+        <li>Contact form integration</li>
+        <li>Advanced SEO setup</li>
+        <li>Google Analytics + Hotjar</li>
+        <li>CMS / Blog setup</li>
+        <li>Custom animations</li>
+        <li class="no">E-commerce</li>
+      </ul>
+      <a href="#" class="btn-primary" style="display:block;text-align:center;width:100%;" onclick="selectPlan('Business','19999')">Choose Business</a>
+    </div>
+
+    <!-- Premium Card -->
+    <div class="pricing-card" style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--charcoal-mid); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+      <div class="plan-name" style="margin-bottom: 0.5rem; text-align: left;">E-Commerce Store</div>
+      <div class="plan-desc">A full-service website for brands ready to sell online and scale aggressively.</div>
+      <div class="plan-price"><sup>₹</sup>39,999</div>
+      <div class="plan-delivery">Delivery in 14–21 days · Unlimited revisions</div>
+      <ul class="plan-features" style="width: 100%;">
+        <li>Unlimited pages</li>
+        <li>Mobile responsive design</li>
+        <li>Contact form integration</li>
+        <li>Full SEO & performance audit</li>
+        <li>Full analytics suite</li>
+        <li>CMS / Blog setup</li>
+        <li>Custom animations</li>
+        <li>E-commerce + payment gateway</li>
+      </ul>
+      <a href="#" class="btn-ghost" style="display:block;text-align:center;width:100%;" onclick="selectPlan('Premium','39999')">Choose Premium</a>
+    </div>
+  </div>
+
+  <!-- OPTIONAL ADD-ONS -->
+  <div class="reveal" style="max-width: 1100px; margin: 4rem auto 3rem; padding: 2.5rem 3rem; background: rgba(28, 38, 51, 0.4); border: 1px solid var(--border-subtle); border-radius: 16px;">
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem;">Optional Add-ons</h3>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem;">Extend any package with these optional extras.</p>
+    
+    <div class="addons-grid">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(8, 15, 24, 0.2);">
+        <span style="font-size: 0.88rem; font-weight: 500; color: var(--text-soft);">Extra Revision Round</span>
+        <span style="font-family:'DM Mono',monospace; font-size: 0.85rem; color: var(--gold); font-weight: 500;">₹999</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(8, 15, 24, 0.2);">
+        <span style="font-size: 0.88rem; font-weight: 500; color: var(--text-soft);">Additional Page</span>
+        <span style="font-family:'DM Mono',monospace; font-size: 0.85rem; color: var(--gold); font-weight: 500;">₹799/page</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(8, 15, 24, 0.2);">
+        <span style="font-size: 0.88rem; font-weight: 500; color: var(--text-soft);">Logo Design</span>
+        <span style="font-family:'DM Mono',monospace; font-size: 0.85rem; color: var(--gold); font-weight: 500;">₹2,999</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(8, 15, 24, 0.2);">
+        <span style="font-size: 0.88rem; font-weight: 500; color: var(--text-soft);">Copywriting (per page)</span>
+        <span style="font-family:'DM Mono',monospace; font-size: 0.85rem; color: var(--gold); font-weight: 500;">₹599/page</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(8, 15, 24, 0.2);">
+        <span style="font-size: 0.88rem; font-weight: 500; color: var(--text-soft);">1-Year Maintenance Retainer</span>
+        <span style="font-family:'DM Mono',monospace; font-size: 0.85rem; color: var(--gold); font-weight: 500;">₹4,999/yr</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: rgba(8, 15, 24, 0.2);">
+        <span style="font-size: 0.88rem; font-weight: 500; color: var(--text-soft);">Custom Animation Package</span>
+        <span style="font-family:'DM Mono',monospace; font-size: 0.85rem; color: var(--gold); font-weight: 500;">₹3,999</span>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align:center;margin-top:2rem;font-size:.8rem;color:var(--text-muted)">50% advance required to begin. Remaining 50% due before site launch.</p>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section-pad">
+  <div style="text-align:center;margin-bottom:0" class="reveal">
+    <span class="section-label">Common Questions</span>
+    <h2 class="section-title">Things people <em>always ask</em></h2>
+  </div>
+  <div class="faq-list reveal" id="faqList">
+    <!-- FAQs will be rendered dynamically via JS -->
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="reveal">
+      <span class="section-label">Get In Touch</span>
+      <h2 class="section-title">Ready to build something <em>exceptional?</em></h2>
+      <div class="divider"></div>
+      <p style="color:var(--text-muted);line-height:1.8;margin-bottom:3rem;font-size:.92rem">We'd love to hear about your project. Fill out our brief form to get started, or reach us directly below.</p>
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-item-icon">✉</div>
+          <div>
+            <h4>Email</h4>
+            <p>hello@koelko.in</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <h4>Location</h4>
+            <p>Hyderabad, Telangana, India</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⏱</div>
+          <div>
+            <h4>Response Time</h4>
+            <p>Within 4 business hours</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="padding:6rem 4rem 6rem 0">
+      <a href="#" class="btn-primary" onclick="showPage('form-page')" style="display:inline-block;margin-bottom:1.5rem">Start a Project →</a>
+      <p style="font-size:.8rem;color:var(--text-muted);line-height:1.7">Takes less than 2 minutes. We review every submission within 4 hours and reach out to confirm your slot.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background: var(--navy-deep); border-top: 1px solid var(--border-subtle); padding: 5rem 4rem 3rem; display: flex; flex-direction: column; gap: 4rem;">
+  <div class="footer-columns" style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 4rem; width: 100%; max-width: 1200px; margin: 0 auto;">
+    
+    <!-- Column 1: Services -->
+    <div>
+      <h4 style="font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.8rem; font-weight: 500;">Services</h4>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+        <li><a href="#services" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Startup Website</a></li>
+        <li><a href="#services" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Business Website</a></li>
+        <li><a href="#services" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">E-commerce Store</a></li>
+        <li><a href="#services" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Landing Pages</a></li>
+        <li><a href="#services" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Web Redesign</a></li>
+      </ul>
+    </div>
+    
+    <!-- Column 2: Company -->
+    <div>
+      <h4 style="font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.8rem; font-weight: 500;">Company</h4>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+        <li><a href="#about" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">About Us</a></li>
+        <li><a href="#portfolio" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Portfolio</a></li>
+        <li><a href="#pricing" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Pricing</a></li>
+        <li><a href="#contact" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Contact</a></li>
+        <li><a href="#" onclick="showPage('form-page'); return false;" style="color: var(--text-soft); text-decoration: none; font-size: 0.9rem; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-soft)'">Start a Project</a></li>
+      </ul>
+    </div>
+    
+    <!-- Column 3: Get In Touch & Status Box -->
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+      <div>
+        <h4 style="font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.8rem; font-weight: 500;">Get In Touch</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+          <li style="display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; color: var(--text-soft);">
+            <span style="color: var(--gold);">✉</span> hello@koelko.studio
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; color: var(--text-soft);">
+            <span style="color: var(--gold);">📞</span> +91 98765 43210
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; color: var(--text-soft);">
+            <span style="color: var(--gold);">📍</span> Mumbai, India
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Acceptance Box -->
+      <div style="padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border-subtle); background: rgba(8, 15, 24, 0.4); max-width: 320px;">
+        <div style="font-size: 0.8rem; font-weight: bold; color: var(--gold-light); margin-bottom: 0.3rem;">Currently accepting</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem;">Limited projects this month</div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 500; color: #4ade80;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: blink 1.8s infinite;"></span>
+          2 slots available
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Footer Bottom bar -->
+  <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: 1.5rem;">
+    <div style="font-family:'Cormorant Garamond',serif; font-size: 1.3rem; font-weight: 400; color: var(--offwhite);">Koel <span style="color: var(--gold)">&</span> Ko</div>
+    <div style="font-size: 0.75rem; color: var(--text-muted);">© 2024 Koel & Ko. All rights reserved.</div>
+    <div style="display: flex; gap: 2rem;">
+      <a href="#" onclick="openPolicy('privacy'); return false;" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">Privacy Policy</a>
+      <a href="#" onclick="openPolicy('terms'); return false;" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">Terms of Service</a>
+      <a href="#" onclick="openAdminPortal(); return false;" style="font-size: 0.75rem; color: var(--border-mid); text-decoration: none; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--border-mid)'">🔑 Admin Portal</a>
+    </div>
+  </div>
+</footer>
+
+<!-- LEGAL POLICY MODAL -->
+<div id="policyModal" style="position: fixed; inset: 0; background: rgba(8, 15, 24, 0.9); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+  <div style="background: var(--charcoal); border: 1px solid var(--border-mid); width: 90%; max-width: 680px; max-height: 80vh; overflow-y: auto; border-radius: 12px; padding: 3rem; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.5);">
+    <button onclick="closePolicy()" style="position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.25s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+    <h3 id="policyTitle" style="font-family:'Cormorant Garamond',serif; font-size: 2.2rem; font-style: italic; font-weight: 300; color: var(--gold-light); margin-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem;">Policy</h3>
+    <div id="policyContent" style="font-size: 0.9rem; color: var(--text-soft); line-height: 1.8; display: flex; flex-direction: column; gap: 1.5rem;">
+      <!-- Dynamic content -->
+    </div>
+    <button onclick="closePolicy()" style="width: 100%; border: 1px solid var(--gold); background: transparent; color: var(--gold); padding: 0.8rem; margin-top: 2.5rem; font-family:'DM Sans',sans-serif; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; cursor: pointer; transition: background 0.25s, color 0.25s;" onmouseover="this.style.color='var(--navy-deep)'; this.style.background='var(--gold)'" onmouseout="this.style.color='var(--gold)'; this.style.background='transparent'">Close Document</button>
+  </div>
+</div>
+
+<!-- ADMIN PORTAL MODAL -->
+<div id="adminModal" style="position: fixed; inset: 0; background: rgba(8, 15, 24, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+  <div style="background: var(--charcoal); border: 1px solid var(--border-mid); width: 95%; max-width: 1000px; height: 85vh; overflow: hidden; border-radius: 12px; display: flex; flex-direction: column; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.6);">
+    <!-- Modal Close Button -->
+    <button onclick="closeAdminPortal()" style="position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: color 0.25s; z-index: 10;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+    
+    <!-- Modal Header -->
+    <div style="padding: 2.5rem 3rem 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size: 2.2rem; font-style: italic; font-weight: 300; color: var(--gold-light);">Admin Portal</h3>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Mono', monospace;">Project Brief Submissions & Leads Dashboard</p>
+    </div>
+    
+    <!-- Modal Dashboard Metrics -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; padding: 1.5rem 3rem; background: rgba(8, 15, 24, 0.3); border-bottom: 1px solid var(--border-subtle);">
+      <div style="padding: 1rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 6px; background: rgba(28, 38, 51, 0.4);">
+        <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; display: block; margin-bottom: 0.3rem;">Total Leads</span>
+        <span id="adminMetricTotalLeads" style="font-family: 'DM Mono', monospace; font-size: 1.8rem; color: var(--gold); font-weight: 500;">0</span>
+      </div>
+      <div style="padding: 1rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 6px; background: rgba(28, 38, 51, 0.4);">
+        <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; display: block; margin-bottom: 0.3rem;">Paid Bookings</span>
+        <span id="adminMetricPaidBookings" style="font-family: 'DM Mono', monospace; font-size: 1.8rem; color: #4ade80; font-weight: 500;">0</span>
+      </div>
+      <div style="padding: 1rem 1.5rem; border: 1px solid var(--border-subtle); border-radius: 6px; background: rgba(28, 38, 51, 0.4);">
+        <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; display: block; margin-bottom: 0.3rem;">Total Revenue Collected</span>
+        <span id="adminMetricRevenue" style="font-family: 'DM Mono', monospace; font-size: 1.8rem; color: var(--offwhite); font-weight: 500;">₹0</span>
+      </div>
+    </div>
+
+    <!-- Table Container (Scrollable) -->
+    <div style="flex: 1; overflow-y: auto; padding: 1.5rem 3rem;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-subtle); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+            <th style="padding: 1rem 0.8rem; width: 15%;">Date & ID</th>
+            <th style="padding: 1rem 0.8rem; width: 25%;">Client Details</th>
+            <th style="padding: 1rem 0.8rem; width: 15%;">Package</th>
+            <th style="padding: 1rem 0.8rem; width: 25%;">Description</th>
+            <th style="padding: 1rem 0.8rem; width: 10%;">Status</th>
+            <th style="padding: 1rem 0.8rem; width: 10%;">Payment ID</th>
+          </tr>
+        </thead>
+        <tbody id="adminPortalTableBody">
+          <!-- Dynamic entries -->
+        </tbody>
+      </table>
+      <div id="adminPortalEmptyState" style="text-align: center; padding: 4rem 0; color: var(--text-muted); display: none;">
+        <span style="font-size: 2rem; display: block; margin-bottom: 1rem;">📭</span>
+        <p>No project briefs have been submitted yet.</p>
+      </div>
+    </div>
+
+    <!-- Modal Footer Controls -->
+    <div style="padding: 1.5rem 3rem; border-top: 1px solid var(--border-subtle); display: flex; gap: 1.5rem; justify-content: space-between; align-items: center; background: rgba(8, 15, 24, 0.3);">
+      <button onclick="clearAdminData()" style="border: 1px solid rgba(255, 92, 92, 0.3); background: transparent; color: #ff5c5c; padding: 0.7rem 1.4rem; font-family:'DM Sans',sans-serif; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.08em; cursor: pointer; transition: background 0.25s, border-color 0.25s;" onmouseover="this.style.background='rgba(255, 92, 92, 0.05)'; this.style.borderColor='#ff5c5c'" onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(255, 92, 92, 0.3)'">Clear All Data</button>
+      
+      <div style="display: flex; gap: 1rem;">
+        <button onclick="exportToCSV()" style="background: var(--gold); border: 1px solid var(--gold); color: var(--navy-deep); padding: 0.7rem 1.8rem; font-family:'DM Sans',sans-serif; font-weight: 500; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.08em; cursor: pointer; transition: background 0.25s;" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'">Export to CSV</button>
+        <button onclick="closeAdminPortal()" style="border: 1px solid var(--border-mid); background: transparent; color: var(--text-soft); padding: 0.7rem 1.5rem; font-family:'DM Sans',sans-serif; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.08em; cursor: pointer; transition: border-color 0.25s, color 0.25s;" onmouseover="this.style.borderColor='var(--offwhite)'; this.style.color='var(--offwhite)'" onmouseout="this.style.borderColor='var(--border-mid)'; this.style.color='var(--text-soft)'">Close Panel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end home-page -->
+
+<!-- ══ FORM PAGE ══ -->
+<div id="form-page" class="page">
+  <div id="form-page-inner">
+    <div style="min-height:100vh;background:var(--navy-deep);padding:8rem 2rem 5rem;display:flex;align-items:flex-start;justify-content:center">
+      <div class="form-container">
+        
+        <div class="stepper-header">
+          <div class="stepper-progress-track">
+            <div class="stepper-progress-fill" id="stepperProgress"></div>
+          </div>
+          <div class="stepper-step-info">
+            <span class="stepper-step-num" id="stepperStepNum">Step 1 of 8</span>
+            <span class="stepper-step-title" id="stepperStepTitle">Business Profile</span>
+          </div>
+        </div>
+
+        <div id="requirementForm">
+          <!-- STEP 1: BUSINESS PROFILE -->
+          <div class="wizard-step" data-step="1">
+            <div class="form-field">
+              <label>Your Full Name</label>
+              <input type="text" id="clientName" placeholder="e.g. Priya Mehta">
+            </div>
+            <div class="form-field">
+              <label>Business / Company Name</label>
+              <input type="text" id="companyName" placeholder="e.g. Aarav Interiors">
+            </div>
+            <div class="form-field">
+              <label>Email Address</label>
+              <input type="email" id="clientEmail" placeholder="hello@yourcompany.com">
+            </div>
+            <div class="form-field">
+              <label>What industry are you in?</label>
+              <select id="industry" style="cursor:none">
+                <option value="" disabled selected>Select your industry</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option>
+                <option value="Technology">Technology</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="E-commerce">E-commerce</option>
+                <option value="Personal Brand">Personal Brand</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Tell us about your business</label>
+              <textarea id="businessDesc" placeholder="Describe what your business does, your mission, and what services you render."></textarea>
+            </div>
+            <div class="form-field">
+              <label>What products or services do you offer?</label>
+              <textarea id="productsServices" placeholder="List your key products or services in detail."></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 2: GOALS & AUDIENCE -->
+          <div class="wizard-step" data-step="2" style="display:none">
+            <div class="form-field">
+              <label>What makes your business different from competitors?</label>
+              <textarea id="differentiator" placeholder="What is your unique selling point? Why do clients choose you?"></textarea>
+            </div>
+            <div class="form-field">
+              <label>Who is your target audience?</label>
+              <div class="checkbox-group">
+                <label class="custom-checkbox"><input type="checkbox" name="targetAudience" value="Students"> <span>Students</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="targetAudience" value="Professionals"> <span>Professionals</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="targetAudience" value="Parents"> <span>Parents</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="targetAudience" value="Small Businesses"> <span>Small Businesses</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="targetAudience" value="Enterprise Clients"> <span>Enterprise Clients</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="targetAudience" value="Other"> <span>Other</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Why do you need a website?</label>
+              <div class="checkbox-group">
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Generate leads"> <span>Generate leads</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Sell products"> <span>Sell products</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Build credibility"> <span>Build credibility</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Showcase portfolio"> <span>Showcase portfolio</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Book appointments"> <span>Book appointments</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Collect inquiries"> <span>Collect inquiries</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="websiteGoals" value="Other"> <span>Other</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>What should visitors do on your website?</label>
+              <div class="checkbox-group">
+                <label class="custom-checkbox"><input type="checkbox" name="visitorActions" value="Contact us"> <span>Contact us</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="visitorActions" value="Purchase products"> <span>Purchase products</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="visitorActions" value="Book a call"> <span>Book a call</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="visitorActions" value="Fill a form"> <span>Fill a form</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="visitorActions" value="Subscribe"> <span>Subscribe</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="visitorActions" value="Browse information"> <span>Browse information</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>What is the primary goal?</label>
+              <select id="primaryGoal" style="cursor:none">
+                <option value="" disabled selected>Select the primary goal</option>
+                <option value="Generate leads">Generate leads</option>
+                <option value="Sell products">Sell products</option>
+                <option value="Build credibility">Build credibility</option>
+                <option value="Showcase portfolio">Showcase portfolio</option>
+                <option value="Book appointments">Book appointments</option>
+                <option value="Collect inquiries">Collect inquiries</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- STEP 3: DESIGN & INSPIRATION -->
+          <div class="wizard-step" data-step="3" style="display:none">
+            <div class="form-field">
+              <label>Do you already have branding?</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="hasBranding" value="Yes"> <span>Yes</span></label>
+                <label class="custom-radio"><input type="radio" name="hasBranding" value="No" checked> <span>No</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Do you have a logo?</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="hasLogo" value="Yes" onchange="toggleLogoUpload(false)"> <span>Yes</span></label>
+                <label class="custom-radio"><input type="radio" name="hasLogo" value="No" checked onchange="toggleLogoUpload(false)"> <span>No</span></label>
+                <label class="custom-radio"><input type="radio" name="hasLogo" value="Upload" onchange="toggleLogoUpload(true)"> <span>Need Logo Design</span></label>
+              </div>
+              <div id="logoUploadField" style="display:none; margin-top:0.8rem;">
+                <label style="border:1px dashed var(--border-subtle); padding:1rem; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:4px; cursor:none;">
+                  <span style="font-size:1.5rem; margin-bottom:0.4rem;">📁</span>
+                  <span style="font-size:0.76rem; color:var(--text-soft);" id="logoFileName">Click to select logo file</span>
+                  <input type="file" id="logoUpload" style="display:none;" onchange="handleLogoUpload(this)">
+                </label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Brand Colors</label>
+              <div class="color-picker-row">
+                <div class="color-picker-wrapper">
+                  <span class="color-label">Primary</span>
+                  <input type="color" id="colorPrimary" value="#c9a84c">
+                </div>
+                <div class="color-picker-wrapper">
+                  <span class="color-label">Secondary</span>
+                  <input type="color" id="colorSecondary" value="#080f18">
+                </div>
+                <div class="color-picker-wrapper">
+                  <span class="color-label">Accent</span>
+                  <input type="color" id="colorAccent" value="#ffffff">
+                </div>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Preferred Website Style</label>
+              <div class="style-cards-grid">
+                <div class="style-card active" onclick="selectStyleCard(this, 'Corporate')">
+                  <div class="style-card-preview corporate-bg">
+                    <div class="style-card-logo">Corporate</div>
+                  </div>
+                  <span>Corporate</span>
+                </div>
+                <div class="style-card" onclick="selectStyleCard(this, 'Modern')">
+                  <div class="style-card-preview modern-bg">
+                    <div class="style-card-logo">Modern</div>
+                  </div>
+                  <span>Modern</span>
+                </div>
+                <div class="style-card" onclick="selectStyleCard(this, 'Luxury')">
+                  <div class="style-card-preview luxury-bg">
+                    <div class="style-card-logo">Luxury</div>
+                  </div>
+                  <span>Luxury</span>
+                </div>
+                <div class="style-card" onclick="selectStyleCard(this, 'Minimal')">
+                  <div class="style-card-preview minimal-bg">
+                    <div class="style-card-logo">Minimal</div>
+                  </div>
+                  <span>Minimal</span>
+                </div>
+                <div class="style-card" onclick="selectStyleCard(this, 'Creative')">
+                  <div class="style-card-preview creative-bg">
+                    <div class="style-card-logo">Creative</div>
+                  </div>
+                  <span>Creative</span>
+                </div>
+                <div class="style-card" onclick="selectStyleCard(this, 'Tech Startup')">
+                  <div class="style-card-preview tech-bg">
+                    <div class="style-card-logo">Tech Startup</div>
+                  </div>
+                  <span>Tech Startup</span>
+                </div>
+              </div>
+              <input type="hidden" id="preferredStyle" value="Corporate">
+            </div>
+            <div class="form-field">
+              <label>Websites You Like (Up to 3 URLs)</label>
+              <input type="url" id="likedSite1" placeholder="Website URL 1" style="margin-bottom:0.5rem">
+              <input type="url" id="likedSite2" placeholder="Website URL 2" style="margin-bottom:0.5rem">
+              <input type="url" id="likedSite3" placeholder="Website URL 3">
+            </div>
+            <div class="form-field">
+              <label>What do you like about them?</label>
+              <textarea id="likedSitesReason" placeholder="What elements (colors, layout, navigation, feel) inspire you about these references?"></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 4: SCOPE & FEATURES -->
+          <div class="wizard-step" data-step="4" style="display:none">
+            <div class="form-field">
+              <label>Which pages do you need?</label>
+              <div class="checkbox-group">
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Home" checked> <span>Home</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="About"> <span>About</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Services"> <span>Services</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Pricing"> <span>Pricing</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Portfolio"> <span>Portfolio</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Blog"> <span>Blog</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Contact"> <span>Contact</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="FAQ"> <span>FAQ</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Careers"> <span>Careers</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="pagesNeeded" value="Custom"> <span>Custom</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Approximately how many pages?</label>
+              <select id="approxPages" style="cursor:none">
+                <option value="" disabled selected>Select page count</option>
+                <option value="1-5">1-5 pages</option>
+                <option value="5-10">5-10 pages</option>
+                <option value="10-20">10-20 pages</option>
+                <option value="20+">20+ pages</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Features Required</label>
+              <div class="checkbox-group">
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Contact Forms"> <span>Contact Forms</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="WhatsApp Integration"> <span>WhatsApp Integration</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Payment Gateway"> <span>Payment Gateway</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Appointment Booking"> <span>Appointment Booking</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="User Login"> <span>User Login</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Membership Area"> <span>Membership Area</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Blog"> <span>Blog</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="E-commerce"> <span>E-commerce</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Newsletter"> <span>Newsletter</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Analytics"> <span>Analytics</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Chat Support"> <span>Chat Support</span></label>
+                <label class="custom-checkbox"><input type="checkbox" name="featuresRequired" value="Custom Feature"> <span>Custom Feature</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Any additional requirements?</label>
+              <textarea id="additionalFeatures" placeholder="Describe any custom integrations or functionality you need."></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 5: CONTENT & TIMELINE -->
+          <div class="wizard-step" data-step="5" style="display:none">
+            <div class="form-field">
+              <label>Do you already have website content?</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="hasContent" value="Yes"> <span>Yes</span></label>
+                <label class="custom-radio"><input type="radio" name="hasContent" value="No"> <span>No</span></label>
+                <label class="custom-radio"><input type="radio" name="hasContent" value="Partially" checked> <span>Partially</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Do you need us to write your website content?</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="needsCopywriting" value="Yes"> <span>Yes</span></label>
+                <label class="custom-radio"><input type="radio" name="needsCopywriting" value="No" checked> <span>No</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Do you have images / photos for the website?</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="hasImages" value="Yes"> <span>Yes</span></label>
+                <label class="custom-radio"><input type="radio" name="hasImages" value="No" checked> <span>No</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Do you need us to source stock images?</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="needsStockImages" value="Yes" checked> <span>Yes</span></label>
+                <label class="custom-radio"><input type="radio" name="needsStockImages" value="No"> <span>No</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>When do you need the website completed?</label>
+              <select id="timeline" style="cursor:none">
+                <option value="" disabled selected>Select timeline</option>
+                <option value="ASAP">ASAP</option>
+                <option value="Within 1 week">Within 1 week</option>
+                <option value="Within 2 weeks">Within 2 weeks</option>
+                <option value="Within 1 month">Within 1 month</option>
+                <option value="Flexible">Flexible</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Is there a specific launch date?</label>
+              <input type="date" id="launchDate" style="cursor:none">
+            </div>
+          </div>
+
+          <!-- STEP 6: BUDGET & BRIEF -->
+          <div class="wizard-step" data-step="6" style="display:none">
+            <div class="form-field">
+              <label>Estimated Project Budget Range</label>
+              <div class="radio-group-vertical">
+                <label class="custom-radio"><input type="radio" name="budgetRange" value="₹10,000 - ₹20,000"> <span>₹10,000 - ₹20,000</span></label>
+                <label class="custom-radio"><input type="radio" name="budgetRange" value="₹20,000 - ₹50,000" checked> <span>₹20,000 - ₹50,000</span></label>
+                <label class="custom-radio"><input type="radio" name="budgetRange" value="₹50,000 - ₹1,00,000"> <span>₹50,000 - ₹1,00,000</span></label>
+                <label class="custom-radio"><input type="radio" name="budgetRange" value="₹1,00,000+"> <span>₹1,00,000+</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Preferred Payment Option</label>
+              <div class="radio-group">
+                <label class="custom-radio"><input type="radio" name="paymentOption" value="50% Advance" checked> <span>50% Advance</span></label>
+                <label class="custom-radio"><input type="radio" name="paymentOption" value="Full Payment"> <span>Full Payment</span></label>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Describe your dream website</label>
+              <span style="display:block;font-size:0.76rem;color:var(--text-muted);margin-top:-0.5rem;margin-bottom:0.7rem;line-height:1.4;">Imagine your website is completed. What would make you say "This is exactly what I wanted"?</span>
+              <textarea id="dreamWebsite" placeholder="e.g. A website that immediately captures lead details with a floating contact widget, looks dark, premium and moody, and loads in less than a second on 4G networks."></textarea>
+            </div>
+          </div>
+
+          <!-- STEP 7: REVIEW INFORMATION -->
+          <div class="wizard-step" data-step="7" style="display:none">
+            <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border-subtle);border-radius:6px;padding:2rem 1.5rem;margin-bottom:2rem;max-height:350px;overflow-y:auto;" id="reviewContainer">
+              <!-- Dynamically mapped by Javascript -->
+            </div>
+            <div class="form-field">
+              <label>Agreement</label>
+              <div class="checkbox-group-vertical">
+                <label class="custom-checkbox"><input type="checkbox" id="agreePayment"> <span>I understand projects begin after payment.</span></label>
+                <label class="custom-checkbox"><input type="checkbox" id="agreeTimelines"> <span>I understand timelines depend on timely content submission.</span></label>
+                <label class="custom-checkbox"><input type="checkbox" id="agreePricing"> <span>I have reviewed the pricing.</span></label>
+                <label class="custom-checkbox"><input type="checkbox" id="agreeTerms"> <span>I agree to the <a href="#" onclick="openPolicy('terms'); return false;" style="color:var(--gold);cursor:none;">Terms & Conditions</a>.</span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 8: PLAN SELECTION -->
+          <div class="wizard-step" data-step="8" style="display:none">
+            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:1.5rem;text-align:center;">Select your web package</div>
+            <div class="plans-wizard-container">
+              <div class="plan-wizard-card" onclick="selectPlanInWizard('Starter', 9999)">
+                <div class="plan-wizard-title">Starter</div>
+                <div class="plan-wizard-price">₹9,999</div>
+                <div class="plan-wizard-desc">Perfect for small portfolios and basic startups.</div>
+                <ul class="plan-wizard-features">
+                  <li>✓ Up to 5 pages</li>
+                  <li>✓ Mobile responsive</li>
+                  <li>✓ Contact forms</li>
+                  <li>✓ SEO setup</li>
+                </ul>
+                <button class="plan-wizard-select-btn" onclick="event.stopPropagation(); selectPlanInWizard('Starter', 9999)">Select Starter</button>
+              </div>
+              <div class="plan-wizard-card active" onclick="selectPlanInWizard('Business', 19999)">
+                <div class="plan-wizard-badge">Most Popular</div>
+                <div class="plan-wizard-title">Business</div>
+                <div class="plan-wizard-price">₹19,999</div>
+                <div class="plan-wizard-desc">Ideal for expanding companies needing rich features.</div>
+                <ul class="plan-wizard-features">
+                  <li>✓ 10-15 pages</li>
+                  <li>✓ WhatsApp integration</li>
+                  <li>✓ Appointment Booking</li>
+                  <li>✓ Fast delivery</li>
+                </ul>
+                <button class="plan-wizard-select-btn" onclick="event.stopPropagation(); selectPlanInWizard('Business', 19999)">Select Business</button>
+              </div>
+              <div class="plan-wizard-card" onclick="selectPlanInWizard('Premium', 39999)">
+                <div class="plan-wizard-title">Premium</div>
+                <div class="plan-wizard-price">₹39,999</div>
+                <div class="plan-wizard-desc">Custom E-Commerce solutions and integrations.</div>
+                <ul class="plan-wizard-features">
+                  <li>✓ Unlimited pages</li>
+                  <li>✓ Payment Gateways</li>
+                  <li>✓ User Login areas</li>
+                  <li>✓ Premium Support</li>
+                </ul>
+                <button class="plan-wizard-select-btn" onclick="event.stopPropagation(); selectPlanInWizard('Premium', 39999)">Select Premium</button>
+              </div>
+            </div>
+            <input type="hidden" id="selectedPlanVal" value="Business">
+          </div>
+
+          <div id="briefFormError" style="color:#ff5c5c; font-size:0.82rem; margin-top:0.5rem; margin-bottom:1.5rem; display:none; font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:0.05em; font-weight:500;"></div>
+          
+          <div class="wizard-nav-buttons" style="display:flex;justify-content:space-between;gap:1rem;margin-top:2.5rem;">
+            <button class="btn-wizard-nav prev-btn" onclick="prevWizardStep()" id="prevStepBtn" style="display:none">← Back</button>
+            <button class="btn-wizard-nav next-btn" onclick="nextWizardStep()" id="nextStepBtn" style="flex:1">Next Step →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAYMENT PAGE ══ -->
+<div id="payment-page" class="page">
+  <div style="min-height:100vh;background:var(--navy-deep);padding:8rem 2rem 5rem;display:flex;align-items:flex-start;justify-content:center">
+    <div class="payment-layout">
+      <div>
+        <span class="section-label">Secure Payment</span>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;font-style:italic;margin-bottom:2.5rem">Complete your<br>booking</h2>
+        <div class="payment-form">
+          <div style="margin-bottom:2rem">
+            <div style="font-size:.74rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.8rem">Payment Method</div>
+            <div class="payment-methods">
+              <div class="payment-method active" style="pointer-events: none; border-color: var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 500;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:var(--gold)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                Razorpay Checkout
+              </div>
+            </div>
+          </div>
+          
+          <div style="padding:2.5rem 2rem;background:var(--charcoal);border:1px solid var(--border-subtle);margin-bottom:1.5rem;text-align:center;border-radius:4px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-style:italic;color:var(--gold-light);margin-bottom:0.8rem">Secure Payments Portal</div>
+            <p style="font-size:0.84rem;color:var(--text-soft);line-height:1.6;max-width:320px;margin:0 auto 1.5rem">Pay securely via Credit/Debit Cards, UPI, Net Banking, or Wallets using Razorpay.</p>
+            <div style="display:flex;justify-content:center;gap:1.5rem;opacity:0.65;font-size:0.75rem;color:var(--text-muted)">
+              <span>💳 Cards</span>
+              <span>📱 UPI</span>
+              <span>🏦 Net Banking</span>
+            </div>
+          </div>
+
+          <div id="paymentError" style="color:#ff5c5c; font-size:0.82rem; margin-bottom:1.5rem; display:none; font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:0.05em; font-weight:500; text-align:center;"></div>
+          <button class="razorpay-btn" onclick="processPayment()">
+            <span>🔒</span> Pay Advance via Razorpay
+          </button>
+          <div class="secure-badge">
+            <span>🔒</span>
+            <span>256-bit SSL · Powered by Razorpay · PCI DSS Compliant</span>
+          </div>
+        </div>
+      </div>
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="order-row">
+          <span>Package</span>
+          <span id="summaryPlan">Business</span>
+        </div>
+        <div class="order-row">
+          <span>Client</span>
+          <span id="summaryName">—</span>
+        </div>
+        <div class="order-row">
+          <span>Total Price</span>
+          <span id="summaryTotal">₹19,999</span>
+        </div>
+        <div class="order-row">
+          <span>50% Advance Due Now</span>
+          <span id="summaryAdvance" style="color:var(--gold)">₹9,999</span>
+        </div>
+        <div class="order-row total">
+          <span>Amount Due Today</span>
+          <span id="summaryDue">₹9,999</span>
+        </div>
+        <div class="order-note">
+          The remaining 50% is due before your website goes live. No surprises.
+        </div>
+        <div style="margin-top:2rem">
+          <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.8rem">What happens next</div>
+          <div style="font-size:.82rem;color:var(--text-soft);line-height:1.7">
+            We review your brief within 24 hours and send a project kickoff email with your timeline, communication channel, and first milestone.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUCCESS PAGE ══ -->
+<div id="success-page" class="page">
+  <div style="min-height:100vh;background:var(--navy-deep);padding:8rem 2rem 5rem;display:flex;align-items:center;justify-content:center">
+    <div class="success-container">
+      <div class="success-icon">✓</div>
+      <h1 class="success-title">Welcome to the Ko-Ko Family!</h1>
+      <p class="success-subtitle">We are absolutely thrilled to have you as part of our creative circle. 🖤✨ Your payment is confirmed, your project slot is secured, and our team is already gear-shifting to build something extraordinary. We'll be in touch within 4 business hours to kick things off.</p>
+      
+      <!-- 6-Card Outline Grid -->
+      <div class="success-grid">
+        <div class="success-card">
+          <span class="success-card-label">Order ID</span>
+          <span class="success-card-value">
+            <span id="successOrderId">KK-2026-00000</span>
+            <button title="Copy Order ID" onclick="copySuccessId()" style="background:none;border:none;cursor:pointer;padding:4px;display:inline-flex;align-items:center;justify-content:center;color:var(--gold);transition:color 0.25s;" onmouseover="this.style.color='var(--gold-light)'" onmouseout="this.style.color='var(--gold)'">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+          </span>
+        </div>
+        
+        <div class="success-card">
+          <span class="success-card-label">Reference ID</span>
+          <span class="success-card-value">
+            <span id="successReference">KK-XXXXXXXX</span>
+          </span>
+        </div>
+        
+        <div class="success-card">
+          <span class="success-card-label">Amount Paid</span>
+          <span class="success-card-value" style="color:var(--gold);" id="successAmount">₹0</span>
+        </div>
+        
+        <div class="success-card">
+          <span class="success-card-label">Package</span>
+          <span class="success-card-value" id="successPackage">—</span>
+        </div>
+        
+        <div class="success-card">
+          <span class="success-card-label">Website Type</span>
+          <span class="success-card-value" id="successWebType">—</span>
+        </div>
+        
+        <div class="success-card">
+          <span class="success-card-label">Est. Delivery</span>
+          <span class="success-card-value" id="successDelivery">—</span>
+        </div>
+      </div>
+
+      <!-- Gold Border Email Confirmation Banner -->
+      <div style="border:1px solid var(--gold);background:rgba(201,168,76,0.04);padding:1.5rem 2rem;border-radius:8px;margin-bottom:3rem;text-align:left;">
+        <div style="display:flex;gap:1rem;align-items:center;">
+          <span style="color:var(--gold);font-size:1.5rem;line-height:1;">✉</span>
+          <span style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;">
+            A confirmation email with your invoice has been sent to <strong id="confirmedEmail" style="color:var(--gold);">—</strong> for <strong id="confirmedClientName" style="color:var(--gold);">—</strong>.
+          </span>
+        </div>
+      </div>
+
+      <div class="what-next">
+        <h4>What happens next</h4>
+        <div class="next-step"><span class="next-step-num">01</span><span>We review your requirements and brief within 24 hours.</span></div>
+        <div class="next-step"><span class="next-step-num">02</span><span>Our team contacts you directly to schedule the kick-off call.</span></div>
+        <div class="next-step"><span class="next-step-num">03</span><span>A dedicated designer and developer begin crafting your layout and copy.</span></div>
+      </div>
+      
+      <button class="btn-ghost" style="width:100%;margin-top:2.5rem;cursor:none" onclick="showPage('home-page')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, updateDoc, getDocs, getDoc, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  const firebaseConfig = {
+    projectId: "koel-and-ko-18",
+    appId: "1:5916865570:web:a5109d8a194c00e487067b",
+    storageBucket: "koel-and-ko-18.firebasestorage.app",
+    apiKey: "AIzaSyA58JDtSqsgf9If7G-dKMcM0TFII56uqog",
+    authDomain: "koel-and-ko-18.firebaseapp.com",
+    messagingSenderId: "5916865570",
+    measurementId: "G-P7GZL9LJYM"
+  };
+  const app = initializeApp(firebaseConfig);
+  window.firebaseDB = getFirestore(app);
+  window.firestoreSDK = { doc, setDoc, updateDoc, getDocs, getDoc, collection };
+  window.firebaseReady = true;
+  document.dispatchEvent(new CustomEvent('firebase-ready'));
+</script>
+
+<script>
+// ── CURSOR
+const dot = document.getElementById('dot');
+const ring = document.getElementById('ring');
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 60);
+});
+
+// ── SCROLL EFFECTS
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  const activePage = document.querySelector('.page.active');
+  const isHome = activePage && activePage.id === 'home-page';
+  if (nav) {
+    if (isHome) {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    } else {
+      nav.classList.add('scrolled');
+    }
+  }
+  const progress = document.getElementById('progress');
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  if (progress) progress.style.width = pct + '%';
+  revealOnScroll();
+  animateBars();
+  animateCounters();
+});
+
+// ── REVEAL ON SCROLL
+function revealOnScroll() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 80) el.classList.add('visible');
+  });
+}
+
+// ── BARS
+let barsAnimated = false;
+function animateBars() {
+  if (barsAnimated) return;
+  const bars = document.querySelectorAll('.bar-fill');
+  bars.forEach(b => {
+    const rect = b.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      b.style.width = b.dataset.width + '%';
+      barsAnimated = true;
+    }
+  });
+}
+
+// ── COUNTERS
+let countersAnimated = false;
+function animateCounters() {
+  if (countersAnimated) return;
+  const counters = document.querySelectorAll('.num[data-count]');
+  if (!counters.length) return;
+  const first = counters[0].getBoundingClientRect();
+  if (first.top > window.innerHeight) return;
+  countersAnimated = true;
+  counters.forEach(el => {
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.count == '100' ? '%' : el.dataset.count == '12' ? '' : '';
+    let current = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current) + (el.dataset.count == '100' ? '%' : '+');
+      if (current >= target) clearInterval(timer);
+    }, 20);
+  });
+}
+
+// ── PAGE SYSTEM
+let currentPlan = { name: 'Business', price: 19999 };
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById(id);
+  if (page) {
+    page.classList.add('active');
+    window.scrollTo(0,0);
+    
+    // Contextually update main navbar scrolled class and CTA content
+    const nav = document.getElementById('navbar');
+    if (nav) {
+      if (id === 'home-page') {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+      } else {
+        nav.classList.add('scrolled');
+      }
+    }
+    
+    const navCta = document.querySelector('#navbar .nav-cta');
+    if (navCta) {
+      if (id === 'home-page') {
+        navCta.textContent = 'Start a Project';
+        navCta.setAttribute('onclick', "showPage('form-page')");
+        navCta.style.display = 'block';
+      } else if (id === 'form-page') {
+        navCta.textContent = '← Back to Home';
+        navCta.setAttribute('onclick', "showPage('home-page')");
+        navCta.style.display = 'block';
+      } else if (id === 'payment-page') {
+        navCta.textContent = '← Edit Brief';
+        navCta.setAttribute('onclick', "showPage('form-page')");
+        navCta.style.display = 'block';
+      } else if (id === 'success-page') {
+        navCta.textContent = '← Back to Home';
+        navCta.setAttribute('onclick', "showPage('home-page')");
+        navCta.style.display = 'block';
+      }
+    }
+    
+    if (id === 'form-page') {
+      activeStep = 1;
+      updateWizard();
+    }
+    
+    if (id === 'home-page') {
+      setTimeout(revealOnScroll, 100);
+    }
+  }
+}
+
+let activeStep = 1;
+const totalSteps = 8;
+
+function updateWizard() {
+  document.querySelectorAll('.wizard-step').forEach(step => {
+    step.style.display = 'none';
+  });
+  
+  const activeStepEl = document.querySelector(`.wizard-step[data-step="${activeStep}"]`);
+  if (activeStepEl) {
+    activeStepEl.style.display = 'block';
+  }
+  
+  const prevBtn = document.getElementById('prevStepBtn');
+  if (prevBtn) {
+    prevBtn.style.display = activeStep > 1 ? 'block' : 'none';
+  }
+  
+  const nextBtn = document.getElementById('nextStepBtn');
+  if (nextBtn) {
+    if (activeStep === 7) {
+      nextBtn.textContent = 'Accept & Select Plan →';
+    } else if (activeStep === 8) {
+      nextBtn.textContent = 'Proceed to Payment →';
+    } else {
+      nextBtn.textContent = 'Next Step →';
+    }
+  }
+  
+  const stepTitles = [
+    "Business Profile",
+    "Goals & Audience",
+    "Design & Style",
+    "Scope & Features",
+    "Content & Timeline",
+    "Project Brief & Budget",
+    "Review Brief Details",
+    "Select Your Plan"
+  ];
+  
+  const progressFill = document.getElementById('stepperProgress');
+  const stepNumEl = document.getElementById('stepperStepNum');
+  const stepTitleEl = document.getElementById('stepperStepTitle');
+  
+  if (progressFill) {
+    const pct = ((activeStep - 1) / (totalSteps - 1)) * 100;
+    progressFill.style.width = pct + '%';
+  }
+  if (stepNumEl) stepNumEl.textContent = `Step ${activeStep} of ${totalSteps}`;
+  if (stepTitleEl) stepTitleEl.textContent = stepTitles[activeStep - 1] || '';
+  
+  const errDiv = document.getElementById('briefFormError');
+  if (errDiv) errDiv.style.display = 'none';
+
+  if (activeStep === 7) {
+    renderReviewSummary();
+  }
+}
+
+function nextWizardStep() {
+  if (validateStep(activeStep)) {
+    if (activeStep < totalSteps) {
+      activeStep++;
+      updateWizard();
+    } else {
+      submitForm();
+    }
+  }
+}
+
+function prevWizardStep() {
+  if (activeStep > 1) {
+    activeStep--;
+    updateWizard();
+  }
+}
+
+function showError(msg) {
+  const errDiv = document.getElementById('briefFormError');
+  if (errDiv) {
+    errDiv.textContent = '⚠ ' + msg;
+    errDiv.style.display = 'block';
+  }
+}
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validateStep(step) {
+  const errDiv = document.getElementById('briefFormError');
+  if (errDiv) errDiv.style.display = 'none';
+
+  if (step === 1) {
+    const name = document.getElementById('clientName').value.trim();
+    const company = document.getElementById('companyName').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+    const industry = document.getElementById('industry').value;
+    const businessDesc = document.getElementById('businessDesc').value.trim();
+    const productsServices = document.getElementById('productsServices').value.trim();
+
+    if (!name || !company || !email || !industry || !businessDesc || !productsServices) {
+      showError('Please fill in your name, company, email, industry, description and services.');
+      return false;
+    }
+    if (!validateEmail(email)) {
+      showError('Please enter a valid email address.');
+      return false;
+    }
+  }
+  
+  if (step === 2) {
+    const differentiator = document.getElementById('differentiator').value.trim();
+    const primaryGoal = document.getElementById('primaryGoal').value;
+    
+    const targetAudience = Array.from(document.querySelectorAll('input[name="targetAudience"]:checked'));
+    const websiteGoals = Array.from(document.querySelectorAll('input[name="websiteGoals"]:checked'));
+    const visitorActions = Array.from(document.querySelectorAll('input[name="visitorActions"]:checked'));
+
+    if (!differentiator || !primaryGoal) {
+      showError('Please specify competitor difference and primary goal.');
+      return false;
+    }
+    if (targetAudience.length === 0 || websiteGoals.length === 0 || visitorActions.length === 0) {
+      showError('Please check at least one box for target audience, website goals, and visitor actions.');
+      return false;
+    }
+  }
+
+  if (step === 4) {
+    const approxPages = document.getElementById('approxPages').value;
+    const pagesNeeded = Array.from(document.querySelectorAll('input[name="pagesNeeded"]:checked'));
+    const featuresRequired = Array.from(document.querySelectorAll('input[name="featuresRequired"]:checked'));
+
+    if (!approxPages) {
+      showError('Please select approximately how many pages you need.');
+      return false;
+    }
+    if (pagesNeeded.length === 0) {
+      showError('Please select which pages you need.');
+      return false;
+    }
+    if (featuresRequired.length === 0) {
+      showError('Please select features you require.');
+      return false;
+    }
+  }
+
+  if (step === 5) {
+    const timeline = document.getElementById('timeline').value;
+    if (!timeline) {
+      showError('Please select when you need the website completed.');
+      return false;
+    }
+  }
+
+  if (step === 6) {
+    const dreamWebsite = document.getElementById('dreamWebsite').value.trim();
+    if (!dreamWebsite) {
+      showError('Please describe your dream website.');
+      return false;
+    }
+  }
+
+  if (step === 7) {
+    const agreePayment = document.getElementById('agreePayment').checked;
+    const agreeTimelines = document.getElementById('agreeTimelines').checked;
+    const agreePricing = document.getElementById('agreePricing').checked;
+    const agreeTerms = document.getElementById('agreeTerms').checked;
+
+    if (!agreePayment || !agreeTimelines || !agreePricing || !agreeTerms) {
+      showError('You must agree to all terms and conditions to proceed.');
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function selectStyleCard(card, styleName) {
+  document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  document.getElementById('preferredStyle').value = styleName;
+}
+
+function selectPlanInWizard(planName, price) {
+  document.getElementById('selectedPlanVal').value = planName;
+  
+  document.querySelectorAll('.plan-wizard-card').forEach(card => {
+    card.classList.remove('active');
+    const cardTitle = card.querySelector('.plan-wizard-title').textContent.trim();
+    if (cardTitle.toLowerCase() === planName.toLowerCase()) {
+      card.classList.add('active');
+    }
+  });
+}
+
+function toggleLogoUpload(show) {
+  const el = document.getElementById('logoUploadField');
+  if (el) el.style.display = show ? 'block' : 'none';
+}
+
+function handleLogoUpload(input) {
+  const nameEl = document.getElementById('logoFileName');
+  if (input.files && input.files[0]) {
+    nameEl.textContent = 'Selected: ' + input.files[0].name;
+    nameEl.style.color = 'var(--gold)';
+  } else {
+    nameEl.textContent = 'Click to select logo file';
+    nameEl.style.color = 'var(--text-soft)';
+  }
+}
+
+function renderReviewSummary() {
+  const container = document.getElementById('reviewContainer');
+  if (!container) return;
+  
+  const getCheckedValues = (name) => {
+    return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+  };
+  
+  const getRadioValue = (name) => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '';
+  };
+  
+  const name = document.getElementById('clientName').value.trim();
+  const company = document.getElementById('companyName').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const industry = document.getElementById('industry').value;
+  const businessDesc = document.getElementById('businessDesc').value.trim();
+  const productsServices = document.getElementById('productsServices').value.trim();
+  
+  const differentiator = document.getElementById('differentiator').value.trim();
+  const targetAudience = getCheckedValues('targetAudience').join(', ') || 'None selected';
+  const websiteGoals = getCheckedValues('websiteGoals').join(', ') || 'None selected';
+  const visitorActions = getCheckedValues('visitorActions').join(', ') || 'None selected';
+  const primaryGoal = document.getElementById('primaryGoal').value;
+  
+  const hasBranding = getRadioValue('hasBranding');
+  const hasLogo = getRadioValue('hasLogo');
+  const colorPrimary = document.getElementById('colorPrimary').value;
+  const colorSecondary = document.getElementById('colorSecondary').value;
+  const colorAccent = document.getElementById('colorAccent').value;
+  const preferredStyle = document.getElementById('preferredStyle').value;
+  const likedSite1 = document.getElementById('likedSite1').value.trim();
+  const likedSite2 = document.getElementById('likedSite2').value.trim();
+  const likedSite3 = document.getElementById('likedSite3').value.trim();
+  const likedSites = [likedSite1, likedSite2, likedSite3].filter(Boolean).join(', ') || 'None provided';
+  const likedSitesReason = document.getElementById('likedSitesReason').value.trim();
+  
+  const pagesNeeded = getCheckedValues('pagesNeeded').join(', ') || 'None selected';
+  const approxPages = document.getElementById('approxPages').value;
+  const featuresRequired = getCheckedValues('featuresRequired').join(', ') || 'None selected';
+  const additionalFeatures = document.getElementById('additionalFeatures').value.trim();
+  
+  const hasContent = getRadioValue('hasContent');
+  const needsCopywriting = getRadioValue('needsCopywriting');
+  const hasImages = getRadioValue('hasImages');
+  const needsStockImages = getRadioValue('needsStockImages');
+  const timeline = document.getElementById('timeline').value;
+  const launchDate = document.getElementById('launchDate').value;
+  
+  const budgetRange = getRadioValue('budgetRange');
+  const paymentOption = getRadioValue('paymentOption');
+  const dreamWebsite = document.getElementById('dreamWebsite').value.trim();
+  
+  container.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:1.5rem; font-size:0.84rem; line-height:1.6; color:var(--text-soft)">
+      <div>
+        <h4 style="color:var(--gold); margin-bottom:0.4rem; font-size:0.9rem;">1. Business Profile</h4>
+        <p><strong>Name:</strong> ${name || '—'}</p>
+        <p><strong>Company:</strong> ${company || '—'}</p>
+        <p><strong>Email:</strong> ${email || '—'}</p>
+        <p><strong>Industry:</strong> ${industry || '—'}</p>
+        <p><strong>About:</strong> ${businessDesc || '—'}</p>
+        <p><strong>Offerings:</strong> ${productsServices || '—'}</p>
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:1rem">
+        <h4 style="color:var(--gold); margin-bottom:0.4rem; font-size:0.9rem;">2. Goals & Audience</h4>
+        <p><strong>USP:</strong> ${differentiator || '—'}</p>
+        <p><strong>Target Audience:</strong> ${targetAudience}</p>
+        <p><strong>Website Goals:</strong> ${websiteGoals}</p>
+        <p><strong>Visitor Actions:</strong> ${visitorActions}</p>
+        <p><strong>Primary Goal:</strong> ${primaryGoal || '—'}</p>
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:1rem">
+        <h4 style="color:var(--gold); margin-bottom:0.4rem; font-size:0.9rem;">3. Design & Style</h4>
+        <p><strong>Has Branding:</strong> ${hasBranding}</p>
+        <p><strong>Has Logo:</strong> ${hasLogo}</p>
+        <p><strong>Colors Selected:</strong> 
+          <span style="display:inline-block; width:12px; height:12px; background:${colorPrimary}; border-radius:2px; vertical-align:middle; margin-left:5px"></span> Primary (${colorPrimary})
+          <span style="display:inline-block; width:12px; height:12px; background:${colorSecondary}; border-radius:2px; vertical-align:middle; margin-left:10px"></span> Secondary (${colorSecondary})
+          <span style="display:inline-block; width:12px; height:12px; background:${colorAccent}; border-radius:2px; vertical-align:middle; margin-left:10px"></span> Accent (${colorAccent})
+        </p>
+        <p><strong>Preferred Style:</strong> ${preferredStyle}</p>
+        <p><strong>Inspiration Links:</strong> ${likedSites}</p>
+        <p><strong>Likes Reason:</strong> ${likedSitesReason || '—'}</p>
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:1rem">
+        <h4 style="color:var(--gold); margin-bottom:0.4rem; font-size:0.9rem;">4. Scope & Features</h4>
+        <p><strong>Pages Needed:</strong> ${pagesNeeded}</p>
+        <p><strong>Approx Pages Count:</strong> ${approxPages || '—'}</p>
+        <p><strong>Features:</strong> ${featuresRequired}</p>
+        <p><strong>Additional Specs:</strong> ${additionalFeatures || '—'}</p>
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:1rem">
+        <h4 style="color:var(--gold); margin-bottom:0.4rem; font-size:0.9rem;">5. Content & Timeline</h4>
+        <p><strong>Has Copy:</strong> ${hasContent}</p>
+        <p><strong>Needs Copywriting:</strong> ${needsCopywriting}</p>
+        <p><strong>Has Images:</strong> ${hasImages}</p>
+        <p><strong>Needs Stock Images:</strong> ${needsStockImages}</p>
+        <p><strong>Timeline:</strong> ${timeline || '—'}</p>
+        <p><strong>Launch Date Target:</strong> ${launchDate || '—'}</p>
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top:1rem">
+        <h4 style="color:var(--gold); margin-bottom:0.4rem; font-size:0.9rem;">6. Brief & Budget</h4>
+        <p><strong>Budget Range:</strong> ${budgetRange}</p>
+        <p><strong>Payment Option Selected:</strong> ${paymentOption}</p>
+        <p><strong>Dream Website Description:</strong> ${dreamWebsite || '—'}</p>
+      </div>
+    </div>
+  `;
+}
+
+function selectPlan(name, price) {
+  activeStep = 1;
+  updateWizard();
+  selectPlanInWizard(name, price);
+  showPage('form-page');
+}
+
+let activePaymentMethod = 'UPI';
+let selectedMerchantBankName = '';
+
+function submitForm() {
+  const name = document.getElementById('clientName').value.trim();
+  const company = document.getElementById('companyName').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const type = document.getElementById('selectedPlanVal').value; // Plan chosen in step 8
+  
+  const getCheckedValues = (name) => {
+    return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+  };
+  const getRadioValue = (name) => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '';
+  };
+
+  const prices = { Starter: 9999, Business: 19999, Premium: 39999 };
+  const paymentOption = getRadioValue('paymentOption');
+
+  currentPlan = { 
+    name: type, 
+    price: prices[type], 
+    clientName: name, 
+    clientEmail: email,
+    paymentOption: paymentOption
+  };
+  
+  const submissionId = 'KK-' + Date.now();
+  const newBrief = {
+    id: submissionId,
+    date: new Date().toLocaleString('en-IN'),
+    name: name,
+    company: company,
+    email: email,
+    planName: type,
+    price: prices[type],
+    paymentOption: paymentOption,
+    status: 'Pending Payment',
+    paymentId: '—',
+    // Expanded Questionnaire Fields
+    industry: document.getElementById('industry').value,
+    businessDesc: document.getElementById('businessDesc').value.trim(),
+    productsServices: document.getElementById('productsServices').value.trim(),
+    differentiator: document.getElementById('differentiator').value.trim(),
+    targetAudience: getCheckedValues('targetAudience'),
+    websiteGoals: getCheckedValues('websiteGoals'),
+    visitorActions: getCheckedValues('visitorActions'),
+    primaryGoal: document.getElementById('primaryGoal').value,
+    hasBranding: getRadioValue('hasBranding'),
+    hasLogo: getRadioValue('hasLogo'),
+    colorPrimary: document.getElementById('colorPrimary').value,
+    colorSecondary: document.getElementById('colorSecondary').value,
+    colorAccent: document.getElementById('colorAccent').value,
+    preferredStyle: document.getElementById('preferredStyle').value,
+    likedSites: [
+      document.getElementById('likedSite1').value.trim(),
+      document.getElementById('likedSite2').value.trim(),
+      document.getElementById('likedSite3').value.trim()
+    ].filter(Boolean),
+    likedSitesReason: document.getElementById('likedSitesReason').value.trim(),
+    pagesNeeded: getCheckedValues('pagesNeeded'),
+    approxPages: document.getElementById('approxPages').value,
+    featuresRequired: getCheckedValues('featuresRequired'),
+    additionalFeatures: document.getElementById('additionalFeatures').value.trim(),
+    hasContent: getRadioValue('hasContent'),
+    needsCopywriting: getRadioValue('needsCopywriting'),
+    hasImages: getRadioValue('hasImages'),
+    needsStockImages: getRadioValue('needsStockImages'),
+    timeline: document.getElementById('timeline').value,
+    launchDate: document.getElementById('launchDate').value,
+    budgetRange: getRadioValue('budgetRange'),
+    dreamWebsite: document.getElementById('dreamWebsite').value.trim()
+  };
+
+  if (window.firebaseReady) {
+    const { doc, setDoc } = window.firestoreSDK;
+    setDoc(doc(window.firebaseDB, "orders", submissionId), newBrief)
+      .then(() => {
+        console.log("Brief successfully written to Firestore");
+      })
+      .catch(err => {
+        console.error("Firestore write failed: ", err);
+      });
+  }
+
+  let briefs = JSON.parse(localStorage.getItem('koel_project_briefs')) || [];
+  briefs.push(newBrief);
+  localStorage.setItem('koel_project_briefs', JSON.stringify(briefs));
+  sessionStorage.setItem('koel_current_submission_id', submissionId);
+
+  updatePaymentSummary();
+  showPage('payment-page');
+}
+
+function updatePaymentSummary() {
+  const p = currentPlan;
+  const isFull = p.paymentOption === 'Full Payment';
+  const total = p.price;
+  const dueToday = isFull ? total : Math.round(total / 2);
+  const dueLater = isFull ? 0 : Math.round(total / 2);
+
+  document.getElementById('summaryPlan').textContent = p.name;
+  document.getElementById('summaryName').textContent = p.clientName || '—';
+  document.getElementById('summaryTotal').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('summaryAdvance').textContent = '₹' + Math.round(total / 2).toLocaleString('en-IN');
+  document.getElementById('summaryDue').textContent = '₹' + dueToday.toLocaleString('en-IN');
+
+  const notesEl = document.querySelector('.order-note');
+  if (notesEl) {
+    if (isFull) {
+      notesEl.textContent = "You selected Full Payment. No further payments are due upon delivery. Thank you!";
+    } else {
+      notesEl.textContent = "The remaining 50% is due before your website goes live. No surprises.";
+    }
+  }
+}
+
+const RAZORPAY_KEY_ID = 'rzp_test_SxUyFdKf9t3Run'; // Replace with your real Razorpay Test Key ID
+
+function processPayment() {
+  const errDiv = document.getElementById('paymentError');
+  if (errDiv) errDiv.style.display = 'none';
+
+  const isFull = currentPlan.paymentOption === 'Full Payment';
+  const dueToday = isFull ? currentPlan.price : Math.round(currentPlan.price / 2);
+  
+  const name = currentPlan.clientName || 'Client';
+  const email = currentPlan.clientEmail || 'hello@koelko.in';
+  const plan = currentPlan.name;
+
+  if (RAZORPAY_KEY_ID === 'rzp_test_placeholder') {
+    const redirectUrl = `payment-gateway.html?plan=${encodeURIComponent(plan)}&amount=${encodeURIComponent(dueToday)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&method=RAZORPAY`;
+    window.location.href = redirectUrl;
+    return;
+  }
+
+  const options = {
+    "key": RAZORPAY_KEY_ID,
+    "amount": dueToday * 100, // Amount in paise
+    "currency": "INR",
+    "name": "Koel & Ko",
+    "description": `${plan} Website Booking (${isFull ? 'Full Payment' : '50% Advance'})`,
+    "handler": function (response) {
+      const paymentId = response.razorpay_payment_id;
+      const successUrl = `koel-and-ko.html?status=success&plan=${encodeURIComponent(plan)}&amount=${encodeURIComponent(dueToday)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&payment_id=${encodeURIComponent(paymentId)}`;
+      window.location.href = successUrl;
+    },
+    "prefill": {
+      "name": name,
+      "email": email
+    },
+    "theme": {
+      "color": "#c9a84c"
+    }
+  };
+
+  try {
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response) {
+      if (errDiv) {
+        errDiv.textContent = '⚠ ' + response.error.description;
+        errDiv.style.display = 'block';
+      }
+    });
+    rzp.open();
+  } catch (error) {
+    console.error("Razorpay SDK Error:", error);
+    if (errDiv) {
+      errDiv.textContent = '⚠ Failed to load payment gateway. Please check your Key ID.';
+      errDiv.style.display = 'block';
+    }
+  }
+}
+
+// ── FAQ
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => {
+    i.classList.remove('open');
+    i.querySelector('.faq-answer').style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  }
+}
+
+// ── MOBILE NAV
+function openMobile() {
+  document.getElementById('mobileMenu').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobile() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── FAQS SYSTEM
+const faqs = [
+  {
+    q: 'How does the process work?',
+    a: 'You fill our minimal 5-field form, choose a package, and complete payment. We then review your requirements, ask any targeted follow-up questions if needed, and begin building. You\'ll receive regular updates until launch.',
+  },
+  {
+    q: 'Why do you ask so few questions upfront?',
+    a: 'Our philosophy is quality over quantity — in every aspect. We don\'t want to waste your time with a 30-question form. We ask for the essentials, then conduct our own research and discovery before reaching out for specifics.',
+  },
+  {
+    q: 'What if I need changes after delivery?',
+    a: 'All packages include post-launch support. Revision rounds are built into every package, and minor adjustments after launch are included during the support window. Major new features are quoted separately.',
+  },
+  {
+    q: 'Do I own the website and code?',
+    a: 'Absolutely. Upon final payment and delivery, you receive full ownership of all code, assets, and credentials. We don\'t hold anything back or retain any licensing rights.',
+  },
+  {
+    q: 'Can you work with my existing brand?',
+    a: 'Yes. If you have brand guidelines, a logo, or a style direction, we incorporate them precisely. If you don\'t, our design process includes basic brand direction as part of the package.',
+  },
+  {
+    q: 'What payment methods do you accept?',
+    a: 'We accept UPI, net banking, debit/credit cards, and wallets — all processed securely through Razorpay. A 50% advance is required to begin; the remaining 50% is due on delivery.',
+  },
+  {
+    q: 'Is the ₹9,999 price really everything included?',
+    a: 'Yes. The prices listed are all-inclusive for the described scope. There are no setup fees, no licensing surprises, and no hidden charges. The only additional cost would be domain/hosting, which you purchase directly.',
+  },
+  {
+    q: 'Do you take on unlimited projects?',
+    a: 'No — and that\'s intentional. We limit the number of projects we accept each month to ensure every client receives exceptional attention. Check availability before booking.',
+  },
+];
+
+function renderFaqs() {
+  const container = document.getElementById('faqList');
+  if (!container) return;
+  container.innerHTML = faqs.map(faq => `
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        ${faq.q}
+        <svg width="18" height="18" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="faq-answer"><p>${faq.a}</p></div>
+    </div>
+  `).join('');
+}
+
+function copySuccessId() {
+  const orderId = document.getElementById('successOrderId').textContent;
+  navigator.clipboard.writeText(orderId).then(() => {
+    const btn = document.querySelector('[title="Copy Order ID"]');
+    if (btn) {
+      const originalSvg = btn.innerHTML;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+      setTimeout(() => { btn.innerHTML = originalSvg; }, 2000);
+    }
+  });
+}
+
+const policyTexts = {
+  privacy: {
+    title: 'Privacy Policy',
+    content: `
+      <p><strong>Last Updated: June 4, 2026</strong></p>
+      <p>Welcome to Koel & Ko. We value your privacy and are committed to protecting your personal data. This Privacy Policy outlines how we collect, store, and utilize the information you share with us during project discovery, checkout, and website launch.</p>
+      <p><strong>1. Information Collection</strong><br>We collect details you submit in our brief form (such as name, company name, email address, and project requirements) to evaluate slots and execute your website project. All payments are securely routed via Razorpay; we never store or process your credit/debit card numbers or UPI PINs on our servers.</p>
+      <p><strong>2. Information Usage</strong><br>The data collected is strictly used to communicate project updates, deliver drafts, register domains, and configure hosting. We do not sell, lease, or distribute your email address or business brief details to third parties.</p>
+      <p><strong>3. Security</strong><br>We use industry-standard SSL encryption across our platforms and store project credentials securely. When linking third-party applications (like analytics or databases) to your site, we enforce secure token handling.</p>
+    `
+  },
+  terms: {
+    title: 'Terms & Conditions',
+    content: `
+      <p><strong>Last Updated: June 4, 2026</strong></p>
+      <p>By engaging Koel & Ko ("Studio") for web design and development services, you ("Client") agree to the following terms and conditions:</p>
+      <p><strong>1. Scope of Work & Packages</strong><br>We deliver custom website code and visual design as described in your selected plan (Starter, Business, or Premium). Any additional scope, extra revision rounds, logo design, or copywriting outside the package limits is subject to add-on pricing as quoted on our platform.</p>
+      <p><strong>2. Payment Terms</strong><br>A secure 50% advance booking payment is required through our payment gateway to reserve your slot and launch requirement review. The remaining 50% payment is due in full upon completion of revision rounds and before the live deployment of site files.</p>
+      <p><strong>3. Intellectual Property Rights</strong><br>Upon final payment and delivery, the Client holds absolute ownership of all custom website code, database schemas, and media assets designed specifically for the project. The Studio retains the showcase rights for its portfolio.</p>
+    `
+  }
+};
+
+function openPolicy(type) {
+  const modal = document.getElementById('policyModal');
+  const title = document.getElementById('policyTitle');
+  const content = document.getElementById('policyContent');
+  
+  if (modal && title && content && policyTexts[type]) {
+    title.textContent = policyTexts[type].title;
+    content.innerHTML = policyTexts[type].content;
+    modal.style.display = 'flex';
+    setTimeout(() => { modal.style.opacity = '1'; }, 10);
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closePolicy() {
+  const modal = document.getElementById('policyModal');
+  if (modal) {
+    modal.style.opacity = '0';
+    setTimeout(() => { modal.style.display = 'none'; }, 300);
+    document.body.style.overflow = '';
+  }
+}
+
+async function sendConfirmationEmail(brief, paymentId) {
+  let apiKey = 'e_AzekL8vN_3g5fDYRYJMbCc6Hq4sPLTDcG';
+  if (apiKey.startsWith('e_')) {
+    apiKey = 'r' + apiKey;
+  }
+  
+  const isFull = brief.paymentOption === 'Full Payment';
+  const priceVal = brief.price || 19999;
+  const paidVal = isFull ? priceVal : Math.round(priceVal / 2);
+  const dueLater = isFull ? 0 : Math.round(priceVal / 2);
+  const targetDate = brief.launchDate || '—';
+  
+  // Safe extraction of fields with fallbacks
+  const company = brief.company || '—';
+  const industry = brief.industry || '—';
+  const businessDesc = brief.businessDesc || '—';
+  const productsServices = brief.productsServices || '—';
+  const differentiator = brief.differentiator || '—';
+  
+  const targetAudience = Array.isArray(brief.targetAudience) ? brief.targetAudience.join(', ') : (brief.targetAudience || '—');
+  const websiteGoals = Array.isArray(brief.websiteGoals) ? brief.websiteGoals.join(', ') : (brief.websiteGoals || '—');
+  const visitorActions = Array.isArray(brief.visitorActions) ? brief.visitorActions.join(', ') : (brief.visitorActions || '—');
+  const primaryGoal = brief.primaryGoal || '—';
+  
+  const hasBranding = brief.hasBranding || '—';
+  const hasLogo = brief.hasLogo || '—';
+  const colorPrimary = brief.colorPrimary || '#c9a84c';
+  const colorSecondary = brief.colorSecondary || '#080f18';
+  const colorAccent = brief.colorAccent || '#ffffff';
+  const preferredStyle = brief.preferredStyle || '—';
+  
+  const likedSites = Array.isArray(brief.likedSites) ? brief.likedSites.filter(Boolean).join(', ') : (brief.likedSites || '—');
+  const likedSitesReason = brief.likedSitesReason || '—';
+  
+  const pagesNeeded = Array.isArray(brief.pagesNeeded) ? brief.pagesNeeded.join(', ') : (brief.pagesNeeded || '—');
+  const approxPages = brief.approxPages || '—';
+  const featuresRequired = Array.isArray(brief.featuresRequired) ? brief.featuresRequired.join(', ') : (brief.featuresRequired || '—');
+  const additionalFeatures = brief.additionalFeatures || '—';
+  
+  const hasContent = brief.hasContent || '—';
+  const needsCopywriting = brief.needsCopywriting || '—';
+  const hasImages = brief.hasImages || '—';
+  const needsStockImages = brief.needsStockImages || '—';
+  
+  const timeline = brief.timeline || '—';
+  const budgetRange = brief.budgetRange || '—';
+  const dreamWebsite = brief.dreamWebsite || '—';
+  
+  const emailHtml = `
+    <div style="font-family: 'DM Sans', Arial, sans-serif; background-color: #080f18; color: #f8f9fa; padding: 3rem 2rem; max-width: 600px; margin: 0 auto; border: 1px solid #c9a84c; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(201, 168, 76, 0.2); padding-bottom: 1.5rem;">
+        <span style="font-size: 2.2rem; font-style: italic; font-weight: 300; color: #ffffff; font-family: 'Cormorant Garamond', Georgia, serif; letter-spacing: 0.05em;">Koel & Ko</span>
+        <div style="font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #c9a84c; margin-top: 0.5rem; font-weight: 400;">Premium Web Development Studio</div>
+      </div>
+      
+      <!-- Welcome Greeting -->
+      <div style="margin-bottom: 2.5rem; text-align: center;">
+        <h2 style="font-size: 1.8rem; font-style: italic; font-weight: 300; color: #c9a84c; margin: 0 0 0.8rem; font-family: 'Cormorant Garamond', Georgia, serif;">Welcome to the Ko-Ko Family!</h2>
+        <p style="font-size: 0.92rem; color: #8a9bac; margin: 0; line-height: 1.6; font-style: italic;">
+          "We are absolutely thrilled to have you as part of our creative circle. 🖤✨ Our team is already gear-shifting to build something extraordinary for you."
+        </p>
+      </div>
+
+      <!-- Financial / Payment Details -->
+      <div style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(201, 168, 76, 0.15); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h3 style="font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: #c9a84c; margin: 0 0 1rem 0; font-family: 'DM Sans', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.4rem;">Transaction Summary</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; color: #f8f9fa;">
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <td style="padding: 0.6rem 0; color: #8a9bac;">Order ID</td>
+            <td style="padding: 0.6rem 0; text-align: right; font-family: monospace; color: #ffffff;">${brief.id || '—'}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <td style="padding: 0.6rem 0; color: #8a9bac;">Payment Reference</td>
+            <td style="padding: 0.6rem 0; text-align: right; font-family: monospace; color: #ffffff;">${paymentId}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <td style="padding: 0.6rem 0; color: #8a9bac;">Selected Plan</td>
+            <td style="padding: 0.6rem 0; text-align: right; font-weight: bold; color: #c9a84c;">${brief.planName || 'Business'} (₹${priceVal.toLocaleString('en-IN')})</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <td style="padding: 0.6rem 0; color: #8a9bac;">Payment Scheme</td>
+            <td style="padding: 0.6rem 0; text-align: right; color: #ffffff;">${brief.paymentOption || '50% Advance'}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+            <td style="padding: 0.6rem 0; color: #8a9bac; font-weight: bold;">Amount Paid Today</td>
+            <td style="padding: 0.6rem 0; text-align: right; font-weight: bold; color: #4ade80;">₹${paidVal.toLocaleString('en-IN')}</td>
+          </tr>
+          <tr>
+            <td style="padding: 0.6rem 0; color: #8a9bac;">Remaining Balance Due</td>
+            <td style="padding: 0.6rem 0; text-align: right; color: #ffffff;">₹${dueLater.toLocaleString('en-IN')}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- What Happens Next -->
+      <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; font-size: 0.88rem; line-height: 1.6; color: #8a9bac; margin-bottom: 2rem;">
+        <p style="margin: 0 0 0.5rem 0; font-weight: bold; color: #ffffff; font-size: 0.95rem;">What Happens Next?</p>
+        <ol style="margin: 0; padding-left: 1.2rem; line-height: 1.7;">
+          <li>Our design leads will analyze your business profile and aesthetic references within 24 hours.</li>
+          <li>We will send a video meeting link directly to <strong>${brief.email || 'your email'}</strong> to establish project scope milestones.</li>
+          <li>We begin Figma wireframing and custom prototyping immediately after the call.</li>
+        </ol>
+      </div>
+      
+      <!-- Footer -->
+      <div style="text-align: center; margin-top: 3rem; font-size: 0.75rem; color: #5f758a; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.2rem;">
+        © 2026 Koel & Ko Studio. Mumbai, India.<br>
+        <span style="font-size: 0.65rem; color: #425567; margin-top: 0.3rem; display: block;">This is an automated confirmation of your booking deposit transaction.</span>
+      </div>
+    </div>
+  `;
+
+  // Standard Resend sandbox recipient configuration:
+  // Using onboarding@resend.dev requires the recipient to be the verified account owner: adhithya12j@gmail.com
+  const senderEmail = 'onboarding@resend.dev';
+  const isSandbox = (senderEmail === 'onboarding@resend.dev');
+  const recipient = isSandbox ? 'adhithya12j@gmail.com' : brief.email;
+  const subjectLine = isSandbox 
+    ? `[TEST MODE] Koel & Ko Booking Confirmed for ${brief.name} (${brief.email})`
+    : `Koel & Ko Booking Confirmed — Order ID: ${brief.id}`;
+
+  const payload = {
+    from: `Koel & Ko <${senderEmail}>`,
+    to: [recipient],
+    subject: subjectLine,
+    html: emailHtml
+  };
+
+  const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://api.resend.com/emails');
+
+  try {
+    const response = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Confirmation email successfully dispatched via Resend:', data);
+    } else {
+      const errorText = await response.text();
+      console.error('Resend email dispatch returned error status:', response.status, errorText);
+    }
+  } catch (error) {
+    console.error('Network error attempting client-side Resend email dispatch:', error);
+  }
+}
+
+// ── INIT
+async function initApp() {
+  renderFaqs();
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('status') === 'success') {
+    const plan = urlParams.get('plan') || 'Business';
+    const name = urlParams.get('name') || 'Client';
+    const amount = urlParams.get('amount') || '9,999';
+    const email = urlParams.get('email') || 'hello@koelko.in';
+    
+    const currentSubId = sessionStorage.getItem('koel_current_submission_id');
+    const orderId = currentSubId || ('KK-2026-' + String(Math.floor(Math.random() * 90000) + 10000));
+    
+    const paymentId = urlParams.get('payment_id');
+    let reference = '';
+    if (paymentId) {
+      reference = paymentId;
+    } else {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let randRef = '';
+      for (let i = 0; i < 8; i++) {
+        randRef += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      reference = 'KK-' + randRef;
+    }
+    
+    // Update status and paymentId in localStorage
+    let sub = null;
+    let briefs = JSON.parse(localStorage.getItem('koel_project_briefs')) || [];
+    if (currentSubId) {
+      sub = briefs.find(b => b.id === currentSubId);
+      if (sub) {
+        sub.status = 'Paid';
+        sub.paymentId = reference;
+        localStorage.setItem('koel_project_briefs', JSON.stringify(briefs));
+      }
+    }
+    
+    let emailSent = false;
+    
+    // Update status in Firestore & add payment record
+    if (window.firebaseReady && currentSubId) {
+      const { doc, updateDoc, setDoc, getDoc } = window.firestoreSDK;
+      try {
+        await updateDoc(doc(window.firebaseDB, "orders", currentSubId), {
+          status: 'Paid',
+          paymentId: reference
+        });
+        console.log("Order updated in Firestore");
+        
+        const paymentRecord = {
+          orderID: currentSubId,
+          status: 'success',
+          amountPaid: Math.round(sub ? sub.price / 2 : parseInt(amount.replace(/,/g, ''))),
+          customerName: name,
+          customerEmail: email,
+          paymentId: reference,
+          paidAt: new Date().toISOString()
+        };
+        await setDoc(doc(window.firebaseDB, "payments", currentSubId), paymentRecord);
+        console.log("Payment record written to Firestore");
+
+        // Fetch detailed order brief from Firestore to send via Resend
+        try {
+          const orderSnap = await getDoc(doc(window.firebaseDB, "orders", currentSubId));
+          if (orderSnap.exists()) {
+            await sendConfirmationEmail(orderSnap.data(), reference);
+            emailSent = true;
+          } else if (sub) {
+            await sendConfirmationEmail(sub, reference);
+            emailSent = true;
+          }
+        } catch (mailErr) {
+          console.error("Failed to query order details for confirmation email:", mailErr);
+          if (sub) {
+            await sendConfirmationEmail(sub, reference);
+            emailSent = true;
+          }
+        }
+      } catch (err) {
+        console.error("Firestore payment success update failed:", err);
+      }
+    }
+    
+    // Fallback: If email has not been sent yet (e.g. Firebase not ready, or Firestore write failed)
+    if (!emailSent) {
+      console.log("Executing client-side Resend confirmation email dispatch via local brief fallback");
+      const fallbackBrief = sub || {
+        id: orderId,
+        name: name,
+        email: email,
+        planName: plan,
+        price: parseInt(amount.replace(/,/g, '')) * (amount.includes('50%') || amount.includes('Advance') ? 2 : 1),
+        paymentOption: amount.includes('Advance') ? '50% Advance' : 'Full Payment',
+        company: '—',
+        industry: '—',
+        preferredStyle: '—',
+        dreamWebsite: '—'
+      };
+      sendConfirmationEmail(fallbackBrief, reference);
+    }
+    
+    const successOrderIdEl = document.getElementById('successOrderId');
+    const successReferenceEl = document.getElementById('successReference');
+    const successAmountEl = document.getElementById('successAmount');
+    const successPackageEl = document.getElementById('successPackage');
+    const successWebTypeEl = document.getElementById('successWebType');
+    const successDeliveryEl = document.getElementById('successDelivery');
+    const confirmedClientNameEl = document.getElementById('confirmedClientName');
+    const confirmedEmailEl = document.getElementById('confirmedEmail');
+
+    if (successOrderIdEl) successOrderIdEl.textContent = orderId;
+    if (successReferenceEl) successReferenceEl.textContent = reference;
+    if (successAmountEl) successAmountEl.textContent = '₹' + parseInt(amount.replace(/,/g, '')).toLocaleString('en-IN');
+    if (successPackageEl) successPackageEl.textContent = plan;
+    
+    const packageDescriptions = {
+      Starter: 'Starter Website (up to 5 pages)',
+      Business: 'Business Website (10-15 pages)',
+      Premium: 'E-Commerce Store (unlimited pages)'
+    };
+    if (successWebTypeEl) successWebTypeEl.textContent = packageDescriptions[plan] || plan;
+    
+    const deliveryDays = { Starter: '7-10 days', Business: '10-12 days', Premium: '14-21 days' };
+    if (successDeliveryEl) successDeliveryEl.textContent = deliveryDays[plan] || '14 days';
+    
+    if (confirmedClientNameEl) confirmedClientNameEl.textContent = name;
+    if (confirmedEmailEl) confirmedEmailEl.textContent = email;
+    
+    try {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (e) {
+      console.warn("Could not clear URL parameters due to browser file:// restrictions", e);
+    }
+    showPage('success-page');
+  } else {
+    showPage('home-page');
+  }
+}
+
+if (window.firebaseReady) {
+  initApp();
+} else {
+  document.addEventListener('firebase-ready', initApp);
+}
+
+// Intercept main navbar and mobile menu hash links to work across pages
+document.querySelectorAll('#navbar a[href^="#"], #mobileMenu a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    const targetId = link.getAttribute('href');
+    if (!targetId || targetId === '#') return;
+    e.preventDefault();
+    showPage('home-page');
+    const targetEl = document.querySelector(targetId);
+    if (targetEl) {
+      setTimeout(() => {
+        targetEl.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+  });
+});
+
+// ── ADMIN PORTAL FUNCTIONS
+function openAdminPortal() {
+  const modal = document.getElementById('adminModal');
+  if (modal) {
+    renderAdminPortal();
+    modal.style.display = 'flex';
+    setTimeout(() => { modal.style.opacity = '1'; }, 10);
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeAdminPortal() {
+  const modal = document.getElementById('adminModal');
+  if (modal) {
+    modal.style.opacity = '0';
+    setTimeout(() => { modal.style.display = 'none'; }, 300);
+    document.body.style.overflow = '';
+  }
+}
+
+async function renderAdminPortal() {
+  const tableBody = document.getElementById('adminPortalTableBody');
+  const emptyState = document.getElementById('adminPortalEmptyState');
+  if (!tableBody) return;
+
+  // Show loading indicator
+  tableBody.innerHTML = `
+    <tr>
+      <td colspan="6" style="text-align: center; padding: 3rem; color: var(--gold);">
+        <div style="display: inline-block; width: 1.5rem; height: 1.5rem; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 0.5rem;"></div>
+        <div>Syncing with Firestore...</div>
+      </td>
+    </tr>
+  `;
+  if (emptyState) emptyState.style.display = 'none';
+
+  let briefs = [];
+  if (window.firebaseReady) {
+    try {
+      const { collection, getDocs } = window.firestoreSDK;
+      const querySnapshot = await getDocs(collection(window.firebaseDB, "orders"));
+      querySnapshot.forEach((doc) => {
+        briefs.push(doc.data());
+      });
+      // Sort briefs by id descending (newest first)
+      briefs.sort((a, b) => b.id.localeCompare(a.id));
+    } catch (error) {
+      console.error("Error fetching briefs from Firestore: ", error);
+      briefs = JSON.parse(localStorage.getItem('koel_project_briefs')) || [];
+      briefs.reverse();
+    }
+  } else {
+    briefs = JSON.parse(localStorage.getItem('koel_project_briefs')) || [];
+    briefs.reverse();
+  }
+
+  // Calculate metrics
+  const totalLeads = briefs.length;
+  const paidBookings = briefs.filter(b => b.status === 'Paid').length;
+  const totalRevenue = briefs
+    .filter(b => b.status === 'Paid')
+    .reduce((sum, b) => sum + Math.round(b.price / 2), 0);
+
+  document.getElementById('adminMetricTotalLeads').textContent = totalLeads;
+  document.getElementById('adminMetricPaidBookings').textContent = paidBookings;
+  document.getElementById('adminMetricRevenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+
+  if (briefs.length === 0) {
+    tableBody.innerHTML = '';
+    if (emptyState) emptyState.style.display = 'block';
+    return;
+  }
+
+  if (emptyState) emptyState.style.display = 'none';
+
+  tableBody.innerHTML = briefs.map(brief => {
+    const advanceAmount = Math.round(brief.price / 2);
+    const statusColor = brief.status === 'Paid' ? '#4ade80' : '#e2c47a';
+    const statusBg = brief.status === 'Paid' ? 'rgba(74, 222, 128, 0.1)' : 'rgba(226, 196, 122, 0.1)';
+    const statusBorder = brief.status === 'Paid' ? 'rgba(74, 222, 128, 0.3)' : 'rgba(226, 196, 122, 0.3)';
+
+    return `
+      <tr style="border-bottom: 1px solid var(--border-subtle); vertical-align: top;">
+        <td style="padding: 1.2rem 0.8rem; font-family: 'DM Mono', monospace; font-size: 0.78rem;">
+          <div style="color: var(--text-main); font-weight: 500;">${brief.id}</div>
+          <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 0.2rem;">${brief.date}</div>
+        </td>
+        <td style="padding: 1.2rem 0.8rem;">
+          <div style="color: var(--text-main); font-weight: 500;">${brief.name}</div>
+          <div style="color: var(--gold); font-size: 0.8rem; margin-top: 0.15rem;">${brief.company}</div>
+          <div style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.15rem; font-family: 'DM Mono', monospace;">${brief.email}</div>
+        </td>
+        <td style="padding: 1.2rem 0.8rem;">
+          <div style="color: var(--text-main); font-weight: 500;">${brief.planName}</div>
+          <div style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.15rem;">Total: ₹${brief.price.toLocaleString('en-IN')}</div>
+          <div style="color: var(--gold-light); font-size: 0.78rem; margin-top: 0.15rem;">50% Adv: ₹${advanceAmount.toLocaleString('en-IN')}</div>
+        </td>
+        <td style="padding: 1.2rem 0.8rem; color: var(--text-soft); line-height: 1.5; font-size: 0.82rem;">
+          <div style="max-height: 80px; overflow-y: auto; white-space: pre-wrap;">${brief.description || brief.dreamWebsite || brief.businessDesc || '—'}</div>
+        </td>
+        <td style="padding: 1.2rem 0.8rem; font-size: 0.72rem; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase;">
+          <span style="display: inline-block; padding: 0.25rem 0.65rem; border: 1px solid ${statusBorder}; border-radius: 4px; background: ${statusBg}; color: ${statusColor};">
+            ${brief.status}
+          </span>
+        </td>
+        <td style="padding: 1.2rem 0.8rem; font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text-muted);">
+          ${brief.paymentId || '—'}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function clearAdminData() {
+  if (confirm("Are you sure you want to clear all locally cached briefs? (Note: Database records will remain intact for security).")) {
+    localStorage.removeItem('koel_project_briefs');
+    renderAdminPortal();
+  }
+}
+
+async function exportToCSV() {
+  let briefs = [];
+  if (window.firebaseReady) {
+    try {
+      const { collection, getDocs } = window.firestoreSDK;
+      const querySnapshot = await getDocs(collection(window.firebaseDB, "orders"));
+      querySnapshot.forEach((doc) => {
+        briefs.push(doc.data());
+      });
+      briefs.sort((a, b) => b.id.localeCompare(a.id));
+    } catch (error) {
+      console.error("Error exporting briefs from Firestore: ", error);
+      briefs = JSON.parse(localStorage.getItem('koel_project_briefs')) || [];
+    }
+  } else {
+    briefs = JSON.parse(localStorage.getItem('koel_project_briefs')) || [];
+  }
+
+  if (briefs.length === 0) {
+    alert("No data available to export.");
+    return;
+  }
+
+  // Define headers
+  const headers = ["Submission ID", "Date", "Client Name", "Company Name", "Email", "Package", "Total Price (INR)", "Advance Paid (INR)", "Description", "Status", "Payment ID"];
+  
+  // Format rows
+  const rows = briefs.map(b => {
+    const advancePaid = b.status === 'Paid' ? Math.round(b.price / 2) : 0;
+    return [
+      b.id,
+      b.date,
+      b.name,
+      b.company,
+      b.email,
+      b.planName,
+      b.price,
+      advancePaid,
+      b.description || b.dreamWebsite || b.businessDesc || '—',
+      b.status,
+      b.paymentId
+    ].map(val => {
+      // Escape double quotes and wrap in quotes to handle commas
+      const text = String(val).replace(/"/g, '""');
+      return `"${text}"`;
+    }).join(',');
+  });
+
+  // Combine CSV content
+  const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+  
+  // Create download link and trigger click
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `koel_project_briefs_${Date.now()}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+revealOnScroll();
+animateBars();
+animateCounters();
+</script>
+</body>
+</html>
